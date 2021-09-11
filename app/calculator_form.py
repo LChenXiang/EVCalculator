@@ -84,6 +84,7 @@ class Calculator_Form(FlaskForm):
 
     # validate postcode here
     def validate_PostCode(self, field):
+        # TODO: Please make this better. So far we only make sure it's between 0000 to 9999
         try:
             postCode = int(field.data)
         except ValueError:
