@@ -1,6 +1,7 @@
 from datetime import datetime, date, time, timedelta
 import holidays
 
+
 class Calculator():
     # you can choose to initialise variables here, if needed.
     def __init__(self):
@@ -34,10 +35,9 @@ class Calculator():
         time = (final_state - initial_state) / 100 * capacity / power
         return time
 
-
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
     def get_configuration(self, config):
-        return self.configuration[config-1]
+        return self.configuration[config - 1]
 
     def is_holiday(self, start_date: date):
         is_weekday = (start_date.weekday() < 5)
@@ -48,11 +48,11 @@ class Calculator():
         right_peak = time(18)
         return left_peak <= start_time < right_peak
 
-    def peak_period(self, start_time):
-        pass
+    # def peak_period(self, start_time):
+    #     pass
 
-    def get_end_time(self, start_time):
-        pass
+    def get_end_time(self, start_date: date, start_time: time, charge_time: int):
+        return datetime.combine(start_date, start_time) + timedelta(hours=charge_time)
 
     # to be acquired through API
     def get_sun_hour(self, sun_hour):
@@ -76,5 +76,3 @@ class Calculator():
 
     def calculate_solar_energy(self):
         pass
-
-
