@@ -82,6 +82,21 @@ class Calculator():
     def calculate_solar_energy(self):
         pass
 
+    def get_charging_time_str(self, charge_hours:float):
+        hours = int(charge_hours)
+        decimal_minutes = (charge_hours % 1) * 60
+        minutes = int(decimal_minutes)
+        seconds = int((decimal_minutes % 1) * 60)
+
+        return_str = ""
+        if hours != 0:
+            return_str += str(hours) + " hours "
+        if minutes != 0:
+            return_str += str(minutes) + " minutes "
+        if seconds != 0:
+            return_str += str(seconds) + " seconds "
+        return return_str.strip()
+
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
                                start_state:int, base_price: int, power:int, capacity: int):
         total_holiday_peak = 0
