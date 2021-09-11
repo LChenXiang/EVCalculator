@@ -6,6 +6,7 @@ from app.calculator import *
 
 from app.calculator_form import *
 import os
+
 SECRET_KEY = os.urandom(32)
 
 ev_calculator_app = Flask(__name__)
@@ -35,29 +36,31 @@ def operation_result():
         start_date = date(day=int(start_date_arr[0]), month=int(start_date_arr[1]), year=int(start_date_arr[2]))
         start_time = time(hour=int(start_time_arr[0]), minute=int(start_time_arr[1]))
 
-        power = calculator.get_configuration(charger_configuration[0])
-        base_cost = calculator.get_configuration(charger_configuration[1])
-
+        power = calculator.get_configuration(charger_configuration)[0]
+        base_cost = calculator.get_configuration(charger_configuration)[1]
 
         # you may change the logic as your like
         time_charge = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
         end_time = calculator.get_end_time(start_date, start_time, time_charge)
+        cost = calculator.total_cost_calculation(start_date, start_time, end_time, initial_charge,
+                                                 final_charge, base_cost, power, battery_capacity)
+        cost_str = "$%.2f" % cost
 
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
 
-
         # you may change the return statement also
-        
-        # values of variables can be sent to the template for rendering the webpage that users will see
-        # return render_template('calculator.html', cost = cost, time = time, calculation_success = True, form = calculator_form)
-        return render_template('calculator.html', calculation_success=True, form=calculator_form)
 
+        # values of variables can be sent to the template for rendering the webpage that users will see
+        return render_template('calculator.html', cost=cost_str, time=time_charge,
+                               calculation_success=True, form=calculator_form)
+        # return render_template('calculator.html', calculation_success=True, form=calculator_form)
     else:
         # battery_capacity = request.form['BatteryPackCapacity']
         # flash(battery_capacity)
         # flash("something went wrong")
         flash_errors(calculator_form)
-        return render_template('calculator.html', calculation_success = False, form = calculator_form)
+        return render_template('calculator.html', calculation_success=False, form=calculator_form)
+
 
 # method to display all errors
 def flash_errors(form):
