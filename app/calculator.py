@@ -53,7 +53,9 @@ class Calculator():
     #     pass
 
     def get_end_time(self, start_date: date, start_time: time, charge_time: int):
-        return datetime.combine(start_date, start_time) + timedelta(hours=charge_time)
+        starting_date_time = datetime.combine(start_date, start_time)
+        time_to_add = timedelta(hours=charge_time)
+        return starting_date_time + time_to_add
 
     # to be acquired through API
     def get_sun_hour(self, sun_hour):
