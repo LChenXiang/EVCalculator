@@ -92,7 +92,6 @@ class Calculator():
         weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (locationID, dateRequest)
         resWeather = requests.get(url=weatherURL)
 
-        print(weatherURL)
         if resWeather.status_code != 200:
             return None
         sunrise_arr = resWeather.json().get("sunrise").split(":")
