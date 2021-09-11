@@ -83,7 +83,7 @@ class Calculator():
         pass
 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state:int, final_state:int, base_price: int, power:int, capacity: int):
+                               start_state:int, base_price: int, power:int, capacity: int):
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
         total_nonHoliday_peak = 0

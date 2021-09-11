@@ -43,7 +43,7 @@ def operation_result():
         time_charge = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
         end_time = calculator.get_end_time(start_date, start_time, time_charge)
         cost = calculator.total_cost_calculation(start_date, start_time, end_time, initial_charge,
-                                                 final_charge, base_cost, power, battery_capacity)
+                                                 base_cost, power, battery_capacity)
         cost_str = "$%.2f" % cost
 
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
