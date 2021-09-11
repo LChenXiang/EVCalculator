@@ -67,7 +67,6 @@ class Calculator():
         pass
 
     # to be acquired through API
-    # Should be only called for Req 2!!!
     def get_day_light_length(self, input_date: date, postcode: str) -> float:
         locationURL = "http://118.138.246.158/api/v1/location?postcode="
         requestLocationURL = locationURL + postcode
