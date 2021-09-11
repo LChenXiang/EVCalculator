@@ -75,8 +75,12 @@ class Calculator_Form(FlaskForm):
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
-        if field.data < str(1) or field.data > str(8):
-            raise ValueError("Configuration data error")
+        try:
+            config = int(field.data)
+        except ValueError:
+            raise ValueError("Configuration is not in a numerical form")
+        if config < 1 or config > 8:
+            raise ValueError("Configuration is not between 1 and 8 inclusive")
 
 
     # validate postcode here
@@ -86,4 +90,4 @@ class Calculator_Form(FlaskForm):
         except ValueError:
             raise ValueError("Postcode is not numerical")
         if 0 > postCode or postCode > 9999:
-            raise ValueError("Invalid Australian Postcode")
+            raise ValueError("Postcode is invalid Australian Postcode")
