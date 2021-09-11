@@ -114,8 +114,22 @@ class Calculator():
         return (sunrise, sunset)
 
     # to be acquired through API
-    def get_solar_energy_duration(self, start_time):
-        pass
+    # Calculate it yourself for each day
+    # get the sunrise and sunset, min max the start and the end, then just get the
+    # difference and convert it to hours or something.
+    def get_solar_energy_duration(self, start_time: time, end_time: time, input_date: date, postcode: str):
+        # THIS FUNCTION SHOULD ONLY BE USED FOR REQ 2!
+        sunrise_sunset = self.get_sunrise_sunset(input_date, postcode)
+        start_time_actual = max(start_time, sunrise_sunset[0])
+        end_time_actual = min(end_time, sunrise_sunset[1])
+        start_time_delta = timedelta(hours=int(start_time_actual.hour),
+                                     minutes=int(start_time_actual.minute),
+                                     seconds=int(start_time_actual.second))
+        end_time_delta = timedelta(hours=int(end_time_actual.hour),
+                                   minutes=int(end_time_actual.minute),
+                                   seconds=int(end_time_actual.second))
+        duration = (end_time_delta - start_time_delta).total_seconds() / 60 / 60
+        return duration
 
     # to be acquired through API
     def get_day_light_length(self, input_date: date, postcode: str) -> float:
