@@ -1,6 +1,7 @@
 from flask import Flask, flash
 from flask import render_template
 from flask import request
+from datetime import date, time
 from app.calculator import *
 
 from app.calculator_form import *
@@ -24,12 +25,16 @@ def operation_result():
         calculator = Calculator()
 
         # extract information from the form
-        battery_capacity = request.form['BatteryPackCapacity']
-        initial_charge = request.form['InitialCharge']
-        final_charge = request.form['FinalCharge']
-        start_date = request.form['StartDate']
-        start_time = request.form['StartTime']
-        charger_configuration = request.form['ChargerConfiguration']
+        battery_capacity = int(request.form['BatteryPackCapacity'])
+        initial_charge = int(request.form['InitialCharge'])
+        final_charge = int(request.form['FinalCharge'])
+        charger_configuration = int(request.form['ChargerConfiguration'])
+        start_date_arr = (request.form['StartDate']).split("/")
+        start_time_arr = (request.form['StartTime']).split(":")
+
+        start_date = date(day=int(start_date_arr[0]), month=int(start_date_arr[1]), year=int(start_date_arr[2]))
+        start_time = time(hour=int(start_time_arr[0]), minute=int(start_time_arr[1]))
+
 
         # you may change the logic as your like
         duration = calculator.get_duration(start_time)
