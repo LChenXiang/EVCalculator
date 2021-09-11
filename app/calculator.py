@@ -89,12 +89,21 @@ class Calculator():
         seconds = int((decimal_minutes % 1) * 60)
 
         return_str = ""
-        if hours != 0:
-            return_str += str(hours) + " hours "
-        if minutes != 0:
-            return_str += str(minutes) + " minutes "
-        if seconds != 0:
-            return_str += str(seconds) + " seconds "
+        if hours > 0:
+            if hours == 1:
+                return_str += str(hours) + " hour "
+            else:
+                return_str += str(hours) + " hours "
+        if minutes > 0:
+            if minutes == 1:
+                return_str += str(minutes) + " minutes "
+            else:
+                return_str += str(minutes) + " minutes "
+        if seconds > 0:
+            if seconds == 1:
+                return_str += str(seconds) + " seconds "
+            else:
+                return_str += str(seconds) + " seconds "
         return return_str.strip()
 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
