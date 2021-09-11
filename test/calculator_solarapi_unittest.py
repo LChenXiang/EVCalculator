@@ -36,7 +36,10 @@ class TestSunHours(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # create the test suit from the cases above.
-    sunHoursSuit = unittest.TestLoader().loadTestsFromTestCase(TestSunHours)
-    # this will run the test suit
-    unittest.TextTestRunner(verbosity=2).run(sunHoursSuit)
+    try:
+        # create the test suit from the cases above.
+        sunHoursSuit = unittest.TestLoader().loadTestsFromTestCase(TestSunHours)
+        # this will run the test suit
+        unittest.TextTestRunner(verbosity=2).run(sunHoursSuit)
+    except Exception:
+        sys.exit(2)
