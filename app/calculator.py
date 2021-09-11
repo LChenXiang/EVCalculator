@@ -1,7 +1,18 @@
+from datetime import datetime, date, time, timedelta
+import holidays
+
 class Calculator():
     # you can choose to initialise variables here, if needed.
     def __init__(self):
-        pass
+        self.australian_holiday = holidays.Australia()
+        self.configuration = [[2, 5],
+                              [3.6, 7.5],
+                              [7.2, 10],
+                              [11, 12.5],
+                              [22, 15],
+                              [36, 20],
+                              [90, 30],
+                              [350, 50]]
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state, final_state, capacity, is_peak, is_holiday):
@@ -25,16 +36,22 @@ class Calculator():
 
 
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
-    def is_holiday(self, start_date):
-        pass
+    def get_configuration(self, config):
+        return self.configuration[config-1]
 
-    def is_peak(self):
-        pass
+    def is_holiday(self, start_date: date):
+        is_weekday = (start_date.weekday() < 5)
+        return is_weekday or start_date in self.australian_holiday
+
+    def is_peak(self, start_time: time) -> bool:
+        left_peak = time(6)
+        right_peak = time(18)
+        return left_peak <= start_time < right_peak
 
     def peak_period(self, start_time):
         pass
 
-    def get_duration(self, start_time):
+    def get_end_time(self, start_time):
         pass
 
     # to be acquired through API
