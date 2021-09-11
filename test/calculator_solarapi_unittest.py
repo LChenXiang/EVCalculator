@@ -35,6 +35,7 @@ class TestDaylightLength(unittest.TestCase):
         expected_output = 10.8334
         self.assertAlmostEqual(res, expected_output, delta=0.01, msg=("Expected %s, got %s" %
                                                                       (expected_output, res)))
+
     def test_DaylightLength_error_invalid_postcode_1(self):
         with self.assertRaises(ValueError):
             self.calculator.get_sun_hour(postcode="0000", input_date=date(year=2021, month=8, day=20))
@@ -85,6 +86,32 @@ class TestSunHours(unittest.TestCase):
     def test_SunHours_error_invalid_date(self):
         with self.assertRaises(ValueError):
             self.calculator.get_sun_hour(postcode="00", input_date=date(year=2000, month=8, day=20))
+
+
+class TestGetSunriseSunSet(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calculator = Calculator()
+
+    def test_SRSS_1(self):
+        input_date = date(2021, 8, 1)
+        postcode = "3800"
+        res = self.calculator.get_sunrise_sunset(input_date, postcode)
+        expected_sunrise = time(hour=7, minute=20, second=0)
+        expected_sunset = time(hour=17, minute=32, second=0)
+        expected_output = (expected_sunrise,expected_sunset)
+        self.assertEqual(expected_sunrise, res[0], msg=("Expected %s, got %s" % (expected_sunrise, res[0])))
+        self.assertEqual(expected_sunset, res[1], msg=("Expected %s, got %s" % (expected_sunset, res[1])))
+
+    def test_SRSS_2(self):
+        input_date = date(2021, 8, 2)
+        postcode = "4000"
+        res = self.calculator.get_sunrise_sunset(input_date, postcode)
+        expected_sunrise = time(hour=6, minute=28, second=0)
+        expected_sunset = time(hour=17, minute=20, second=0)
+        expected_output = (expected_sunrise,expected_sunset)
+        self.assertEqual(expected_sunrise, res[0], msg=("Expected %s, got %s" % (expected_sunrise, res[0])))
+        self.assertEqual(expected_sunset, res[1], msg=("Expected %s, got %s" % (expected_sunset, res[1])))
 
 
 if __name__ == "__main__":
