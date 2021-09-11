@@ -35,6 +35,17 @@ class TestDaylightLength(unittest.TestCase):
         expected_output = 10.8334
         self.assertAlmostEqual(res, expected_output, delta=0.01, msg=("Expected %s, got %s" %
                                                                       (expected_output, res)))
+    def test_DaylightLength_error_invalid_postcode_1(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="0000", input_date=date(year=2021, month=8, day=20))
+
+    def test_DaylightLength_error_invalid_postcode_2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="00", input_date=date(year=2021, month=8, day=20))
+
+    def test_DaylightLength_error_invalid_date(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="00", input_date=date(year=2000, month=8, day=20))
 
 
 class TestSunHours(unittest.TestCase):
@@ -62,6 +73,18 @@ class TestSunHours(unittest.TestCase):
         res = self.calculator.get_sun_hour(input_date, postcode)
         expected_output = 2.6
         self.assertEqual(res, expected_output, msg=("Expected %s, got %s" % (expected_output, res)))
+
+    def test_SunHours_error_invalid_postcode_1(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="0000", input_date=date(year=2021, month=8, day=20))
+
+    def test_SunHours_error_invalid_postcode_2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="00", input_date=date(year=2021, month=8, day=20))
+
+    def test_SunHours_error_invalid_date(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="00", input_date=date(year=2000, month=8, day=20))
 
 
 if __name__ == "__main__":
