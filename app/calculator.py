@@ -59,24 +59,17 @@ class Calculator():
         return starting_date_time + time_to_add
 
     # to be acquired through API
-    def get_sun_hour(self, sun_hour):
-        pass
+    def get_sun_hour(self, input_date: date, postcode: str) -> float:
+        resWeather = self.get_weather_data(input_date, postcode)
 
-    # to be acquired through API
-    def get_solar_energy_duration(self, start_time):
-        pass
-
-    # to be acquired through API
-    def get_day_light_length(self, input_date: date, postcode: str) -> float:
+    def get_weather_data(self, input_date, postcode):
         locationURL = "http://118.138.246.158/api/v1/location?postcode="
         requestLocationURL = locationURL + postcode
         resLocation = requests.get(url=requestLocationURL)
-
         if resLocation.status_code != 200:
             raise ValueError("Invalid postcode")
         if len(resLocation.json()) == 0:
             raise ValueError("Invalid postcode")
-
         locationID = resLocation.json()[0].get("id")
         if input_date.month < 10:
             month = "0" + str(input_date.month)
@@ -86,13 +79,20 @@ class Calculator():
             day = "0" + str(input_date.day)
         else:
             day = str(input_date.day)
-
         dateRequest = "%s-%s-%s" % (input_date.year, month, day)
         weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (locationID, dateRequest)
         resWeather = requests.get(url=weatherURL)
-
         if resWeather.status_code != 200:
             raise ValueError("Could not get weather data")
+        return resWeather
+
+    # to be acquired through API
+    def get_solar_energy_duration(self, start_time):
+        pass
+
+    # to be acquired through API
+    def get_day_light_length(self, input_date: date, postcode: str) -> float:
+        resWeather = self.get_weather_data(input_date, postcode)
         sunrise_arr = resWeather.json().get("sunrise").split(":")
         sunrise = timedelta(hours=int(sunrise_arr[0]), minutes=int(sunrise_arr[1]), seconds=int(sunrise_arr[2]))
         sunset_arr = resWeather.json().get("sunset").split(":")
