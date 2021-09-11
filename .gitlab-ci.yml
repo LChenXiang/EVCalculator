@@ -9,4 +9,4 @@ test:
         - pip3 install --upgrade pip
         - pip3 install -r requirements.txt
         - cd test
-        - python3 calculator_unittest.py
+        - python3 calculator_blackbox_unittest.py
