@@ -35,20 +35,16 @@ def operation_result():
         start_date = date(day=int(start_date_arr[0]), month=int(start_date_arr[1]), year=int(start_date_arr[2]))
         start_time = time(hour=int(start_time_arr[0]), minute=int(start_time_arr[1]))
 
+        power = calculator.get_configuration(charger_configuration[0])
+        base_cost = calculator.get_configuration(charger_configuration[1])
+
 
         # you may change the logic as your like
-        duration = calculator.get_duration(start_time)
-
-        is_peak = calculator.is_peak()
-
-        if is_peak:
-            peak_period = calculator.peak_period(start_date)
-
-        is_holiday = calculator.is_holiday(start_date)
+        time_charge = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
+        end_time = calculator.get_end_time(start_date, start_time, time_charge)
 
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
 
-        # time = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
 
         # you may change the return statement also
         
