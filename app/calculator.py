@@ -113,8 +113,21 @@ class Calculator():
     #     pass
 
     # to be acquired through API
-    def get_cloud_cover(self):
-        pass
+
+    def get_cloud_cover(self, input_date: date, postcode: str) -> list:
+        """
+        Gets the list of cloud cover values for the given date and postcode.
+        :param input_date: Date to find cloud cover values
+        :param postcode: Postcode of the location
+        :return: List of cloud cover values for hour 0 to hour 23
+        """
+        resWeather = self.get_weather_data(input_date, postcode)
+        resWeatherCloudCoverList = resWeather.json().get("hourlyWeatherHistory")
+        res_cloud_clover = []
+        for each in resWeatherCloudCoverList:
+            hourly_cloud = each.get("cloudCoverPct")
+            res_cloud_clover.append(hourly_cloud)
+        return res_cloud_clover
 
     def calculate_solar_energy(self):
         pass
