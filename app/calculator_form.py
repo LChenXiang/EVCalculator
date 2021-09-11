@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Optional
 from datetime import date, time
+import requests
 
 
 # validation for form inputs
@@ -63,7 +64,7 @@ class Calculator_Form(FlaskForm):
 
     # validate start date here
     def validate_StartDate(self, field):
-        #print("Type: %s, data: %s" %(type(field.data), field.data))
+        # print("Type: %s, data: %s" %(type(field.data), field.data))
         # conversion and checking is automatically done already....
         pass
 
@@ -81,13 +82,19 @@ class Calculator_Form(FlaskForm):
         if config < 1 or config > 8:
             raise ValueError("Configuration is not between 1 and 8 inclusive")
 
-
     # validate postcode here
     def validate_PostCode(self, field):
-        # TODO: Please make this better. So far we only make sure it's between 0000 to 9999
+        # TODO: Check if can be better
         try:
             postCode = int(field.data)
         except ValueError:
             raise ValueError("Postcode is not numerical")
-        if 0 > postCode or postCode > 9999:
-            raise ValueError("Postcode is invalid Australian Postcode")
+        # if 0 > postCode or postCode > 9999:
+        #     raise ValueError("Postcode is invalid Australian Postcode")
+        locationURL = "http://118.138.246.158/api/v1/location?postcode="
+        requestLocationURL = locationURL + field.data
+        resLocation = requests.get(url=requestLocationURL)
+        if resLocation.status_code != 200:
+            raise ValueError("Invalid postcode")
+        if len(resLocation.json()) == 0:
+            raise ValueError("Invalid postcode")
