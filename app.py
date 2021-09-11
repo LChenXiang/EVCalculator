@@ -47,6 +47,8 @@ def operation_result():
         cost_str = "$%.2f" % cost
         time_str = calculator.get_charging_time_str(time_charge)
 
+        # TODO: Compare Solar energy calculation with cost
+
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
 
         # you may change the return statement also
