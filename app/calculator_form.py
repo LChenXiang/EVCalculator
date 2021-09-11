@@ -24,7 +24,7 @@ class Calculator_Form(FlaskForm):
         elif field.data == '':
             raise ValueError("cannot fetch data")
         try:
-            batteryCapacity = int(field.data)
+            batteryCapacity = float(field.data)
         except ValueError:
             raise ValueError("Battery capacity is not numerical")
         if batteryCapacity <= 0:
@@ -35,11 +35,11 @@ class Calculator_Form(FlaskForm):
         # another example of how to compare initial charge with final charge
         # you may modify this part of the code
         try:
-            initialCharge = int(field.data)
+            initialCharge = float(field.data)
         except ValueError:
             raise ValueError("Initial charge is not an integer")
         try:
-            finalCharge = int(self.FinalCharge.data)
+            finalCharge = float(self.FinalCharge.data)
         except ValueError:
             raise ValueError("Final charge is not an integer")
 
@@ -49,11 +49,11 @@ class Calculator_Form(FlaskForm):
     # validate final charge here
     def validate_FinalCharge(self, field):
         try:
-            initialCharge = int(self.InitialCharge.data)
+            initialCharge = float(self.InitialCharge.data)
         except ValueError:
             raise ValueError("Initial charge is not an integer")
         try:
-            finalCharge = int(field.data)
+            finalCharge = float(field.data)
         except ValueError:
             raise ValueError("Final charge is not an integer")
         if initialCharge > finalCharge:
