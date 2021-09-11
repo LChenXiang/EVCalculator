@@ -58,7 +58,13 @@ class Calculator():
         time_to_add = timedelta(hours=charge_time)
         return starting_date_time + time_to_add
 
-    def get_weather_data(self, input_date, postcode):
+    def get_weather_data(self, input_date: date, postcode: str):
+        """
+        Returns all the weather data for the given date and postcode
+        :param input_date: Date of the weather data
+        :param postcode: Postcode/location of the weather data
+        :return: Weather data, in requests data type
+        """
         locationURL = "http://118.138.246.158/api/v1/location?postcode="
         requestLocationURL = locationURL + postcode
         resLocation = requests.get(url=requestLocationURL)
@@ -84,16 +90,28 @@ class Calculator():
 
     # to be acquired through API
     def get_sun_hour(self, input_date: date, postcode: str) -> float:
+        """
+        Returns the sun hour data for solar energy calculation of this date and postcode
+        :param input_date: Date of the data
+        :param postcode: Postcode/location of the data
+        :return: Sun hour data for the given date and postcode
+        """
         resWeather = self.get_weather_data(input_date, postcode)
         return resWeather.json().get("sunHours")
 
     def get_sunrise_sunset(self, input_date: date, postcode: str):
+        """
+        Returns the sunrise and sunset time data type in a tuple, given date and postcode
+        :param input_date: Date to get the data
+        :param postcode: Location/Postcode of the data
+        :return: Sunrise and sunset, in time type, in a tuple.
+        """
         resWeather = self.get_weather_data(input_date, postcode)
         sunrise_arr = resWeather.json().get("sunrise").split(":")
         sunrise = time(hour=int(sunrise_arr[0]), minute=int(sunrise_arr[1]), second=int(sunrise_arr[2]))
         sunset_arr = resWeather.json().get("sunset").split(":")
         sunset = time(hour=int(sunset_arr[0]), minute=int(sunset_arr[1]), second=int(sunset_arr[2]))
-        return (sunrise,sunset)
+        return (sunrise, sunset)
 
     # to be acquired through API
     def get_solar_energy_duration(self, start_time):
@@ -101,6 +119,12 @@ class Calculator():
 
     # to be acquired through API
     def get_day_light_length(self, input_date: date, postcode: str) -> float:
+        """
+        Returns the daylight length hours of the given date and postcode
+        :param input_date: Date to get the data
+        :param postcode: Location/Postcode of the data
+        :return: Daylight length hours of the given date and postcode
+        """
         sunrise, sunset = self.get_sunrise_sunset(input_date, postcode)
         sunrise_delta = timedelta(hours=sunrise.hour, minutes=sunrise.minute, seconds=sunrise.second)
         sunset_delta = timedelta(hours=sunset.hour, minutes=sunset.minute, seconds=sunset.second)
