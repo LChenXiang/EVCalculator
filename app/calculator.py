@@ -61,6 +61,7 @@ class Calculator():
     # to be acquired through API
     def get_sun_hour(self, input_date: date, postcode: str) -> float:
         resWeather = self.get_weather_data(input_date, postcode)
+        return resWeather.json().get("sunHours")
 
     def get_weather_data(self, input_date, postcode):
         locationURL = "http://118.138.246.158/api/v1/location?postcode="
