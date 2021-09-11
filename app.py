@@ -45,13 +45,14 @@ def operation_result():
         cost = calculator.total_cost_calculation(start_date, start_time, end_time, initial_charge,
                                                  base_cost, power, battery_capacity)
         cost_str = "$%.2f" % cost
+        time_str = calculator.get_charging_time_str(time_charge)
 
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
 
         # you may change the return statement also
 
         # values of variables can be sent to the template for rendering the webpage that users will see
-        return render_template('calculator.html', cost=cost_str, time=time_charge,
+        return render_template('calculator.html', cost=cost_str, time=time_str,
                                calculation_success=True, form=calculator_form)
         # return render_template('calculator.html', calculation_success=True, form=calculator_form)
     else:
