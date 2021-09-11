@@ -56,7 +56,6 @@ class Calculator_Form(FlaskForm):
             finalCharge = int(field.data)
         except ValueError:
             raise ValueError("Final charge is not an integer")
-        print(field.data)
         if initialCharge > finalCharge:
             raise ValueError("Final charge is smaller than initial charge")
         if finalCharge > 100:
