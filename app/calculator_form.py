@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Optional
+from datetime import date, time
+
 
 # validation for form inputs
 class Calculator_Form(FlaskForm):
@@ -21,30 +23,67 @@ class Calculator_Form(FlaskForm):
             raise ValidationError('Field data is none')
         elif field.data == '':
             raise ValueError("cannot fetch data")
+        try:
+            batteryCapacity = int(field.data)
+        except ValueError:
+            raise ValueError("Battery capacity is not numerical")
+        if batteryCapacity <= 0:
+            raise ValueError("Battery capacity cannot be 0 or negative")
 
     # validate initial charge here
     def validate_InitialCharge(self, field):
         # another example of how to compare initial charge with final charge
         # you may modify this part of the code
-        if field.data > self.FinalCharge.data:
-            raise ValueError("Initial charge data error")
+        try:
+            initialCharge = int(field.data)
+        except ValueError:
+            raise ValueError("Initial charge is not an integer")
+        try:
+            finalCharge = int(self.FinalCharge.data)
+        except ValueError:
+            raise ValueError("Final charge is not an integer")
+
+        if initialCharge > finalCharge:
+            raise ValueError("Initial charge is bigger than final charge")
 
     # validate final charge here
     def validate_FinalCharge(self, field):
-        pass
+        try:
+            initialCharge = int(self.InitialCharge.data)
+        except ValueError:
+            raise ValueError("Initial charge is not an integer")
+        try:
+            finalCharge = int(field.data)
+        except ValueError:
+            raise ValueError("Final charge is not an integer")
+        print(field.data)
+        if initialCharge > finalCharge:
+            raise ValueError("Final charge is smaller than initial charge")
+        if finalCharge > 100:
+            raise ValueError("Final charge is bigger than 100")
 
     # validate start date here
     def validate_StartDate(self, field):
+        #print("Type: %s, data: %s" %(type(field.data), field.data))
+        # conversion and checking is automatically done already....
         pass
 
     # validate start time here
     def validate_StartTime(self, field):
+        # conversion and checking is automatically done already....
         pass
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
-        pass
+        if field.data < str(1) or field.data > str(8):
+            raise ValueError("Configuration data error")
+
 
     # validate postcode here
     def validate_PostCode(self, field):
-        pass
+        try:
+            postCode = int(field.data)
+        except ValueError:
+            raise ValueError("Postcode is not numerical")
+        if 0 > postCode or postCode > 9999:
+            raise ValueError("Invalid Australian Postcode")
