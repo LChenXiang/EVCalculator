@@ -16,18 +16,19 @@ class Calculator():
                               [350, 50]]
 
     # you may add more parameters if needed, you may modify the formula also.
-    def cost_calculation(self, initial_state, final_state, capacity, is_peak, is_holiday):
+    def cost_calculation(self, initial_state: int, final_state: int, capacity:int,
+                         is_peak:bool, is_holiday:bool, base_price:int):
         if is_peak:
-            base_price = 100
+            peak_modifier = 1
         else:
-            base_price = 50
+            peak_modifier = 0.5
 
         if is_holiday:
             surcharge_factor = 1.1
         else:
             surcharge_factor = 1
 
-        cost = (final_state - initial_state) / 100 * capacity * base_price / 100 * surcharge_factor
+        cost = ((final_state - initial_state) / 100) * capacity * (base_price / 100) * surcharge_factor * peak_modifier
         return cost
 
     # you may add more parameters if needed, you may also modify the formula.
@@ -76,3 +77,5 @@ class Calculator():
 
     def calculate_solar_energy(self):
         pass
+
+
