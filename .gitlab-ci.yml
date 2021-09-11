@@ -1,0 +1,12 @@
+stages:
+    - test
+
+test:
+    stage: test
+    image: python:3.8-alpine
+    script:
+        - echo "Testing"
+        - pip3 install --upgrade pip
+        - pip3 install -r requirements.txt
+        - cd test
+        - python3 calculator_blackbox_unittest.py
