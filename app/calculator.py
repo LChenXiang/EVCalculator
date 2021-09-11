@@ -171,6 +171,7 @@ class Calculator():
     def calculate_solar_energy_past_to_currentday_minus_two(self, start_time_date: datetime,
                                                             end_time_date: datetime, postcode: str):
         # TODO: implement req 2
+        # RETURN 0 FOR THE DATE IF IT IS LESS THAN 1 JULY 2008!
         pass
 
     def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
@@ -183,9 +184,9 @@ class Calculator():
         minus_two_day = timedelta(days=2)
         current_date = datetime.now().date()
         if start_time_date.date() > (current_date-minus_two_day):
-            self.calculate_solar_energy_future(start_time_date, end_time_date, postcode)
+            return self.calculate_solar_energy_future(start_time_date, end_time_date, postcode)
         else:
-            self.calculate_solar_energy_past_to_currentday_minus_two(start_time_date,
+            return self.calculate_solar_energy_past_to_currentday_minus_two(start_time_date,
                                                                      end_time_date,
                                                                      postcode)
 
