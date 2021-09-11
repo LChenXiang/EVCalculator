@@ -119,6 +119,7 @@ class Calculator():
     # difference and convert it to hours or something.
     def get_solar_energy_duration(self, start_time: time, end_time: time, input_date: date, postcode: str):
         # THIS FUNCTION SHOULD ONLY BE USED FOR REQ 2!
+        # Tell me if u want me to change this to better suit need (NYK)
         sunrise_sunset = self.get_sunrise_sunset(input_date, postcode)
         start_time_actual = max(start_time, sunrise_sunset[0])
         end_time_actual = min(end_time, sunrise_sunset[1])
@@ -167,8 +168,26 @@ class Calculator():
             res_cloud_clover.append(hourly_cloud)
         return res_cloud_clover
 
-    def calculate_solar_energy(self):
+    def calculate_solar_energy_past_to_currentday_minus_two(self, start_time_date: datetime,
+                                                            end_time_date: datetime, postcode: str):
+        # TODO: implement req 2
         pass
+
+    def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
+                               postcode: str):
+        # TODO: implement req 3
+        pass
+
+    def calculate_solar_energy(self, start_time_date: datetime, end_time_date: datetime,
+                               postcode: str):
+        minus_two_day = timedelta(days=2)
+        current_date = datetime.now().date()
+        if start_time_date.date() > (current_date-minus_two_day):
+            self.calculate_solar_energy_future(start_time_date, end_time_date, postcode)
+        else:
+            self.calculate_solar_energy_past_to_currentday_minus_two(start_time_date,
+                                                                     end_time_date,
+                                                                     postcode)
 
     def get_charging_time_str(self, charge_hours: float):
         hours = int(charge_hours)
