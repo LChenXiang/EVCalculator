@@ -99,7 +99,7 @@ class TestGetSunriseSunSet(unittest.TestCase):
         res = self.calculator.get_sunrise_sunset(input_date, postcode)
         expected_sunrise = time(hour=7, minute=20, second=0)
         expected_sunset = time(hour=17, minute=32, second=0)
-        expected_output = (expected_sunrise,expected_sunset)
+        expected_output = (expected_sunrise, expected_sunset)
         self.assertEqual(expected_sunrise, res[0], msg=("Expected %s, got %s" % (expected_sunrise, res[0])))
         self.assertEqual(expected_sunset, res[1], msg=("Expected %s, got %s" % (expected_sunset, res[1])))
 
@@ -109,9 +109,33 @@ class TestGetSunriseSunSet(unittest.TestCase):
         res = self.calculator.get_sunrise_sunset(input_date, postcode)
         expected_sunrise = time(hour=6, minute=28, second=0)
         expected_sunset = time(hour=17, minute=20, second=0)
-        expected_output = (expected_sunrise,expected_sunset)
+        expected_output = (expected_sunrise, expected_sunset)
         self.assertEqual(expected_sunrise, res[0], msg=("Expected %s, got %s" % (expected_sunrise, res[0])))
         self.assertEqual(expected_sunset, res[1], msg=("Expected %s, got %s" % (expected_sunset, res[1])))
+
+
+class TestCloudCover(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calculator = Calculator()
+
+    def test_cloud_cover_1(self):
+        input_date = date(2021, 8, 2)
+        postcode = "4000"
+        excepted_list = [12, 12, 12, 13, 13, 12, 12, 13,
+                         13, 14, 13, 12, 11, 20, 29, 37,
+                         48, 59, 69, 75, 81, 87, 79, 72]
+        res = self.calculator.get_cloud_cover(input_date, postcode)
+        self.assertEqual(res, excepted_list, msg=("Excepted %s, got %s" % (excepted_list, res)))
+
+    def test_cloud_cover_2(self):
+        input_date = date(2021, 8, 1)
+        postcode = "3800"
+        excepted_list = [100, 94, 87, 81, 79, 78, 76, 78,
+                         80, 82, 67, 51, 35, 30, 24, 18,
+                         18, 19, 19, 16, 13, 10, 8, 7]
+        res = self.calculator.get_cloud_cover(input_date, postcode)
+        self.assertEqual(res, excepted_list, msg=("Excepted %s, got %s" % (excepted_list, res)))
 
 
 if __name__ == "__main__":
