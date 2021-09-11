@@ -74,9 +74,9 @@ class Calculator():
         resLocation = requests.get(url=requestLocationURL)
 
         if resLocation.status_code != 200:
-            return None
+            raise ValueError("Invalid postcode")
         if len(resLocation.json()) == 0:
-            return None
+            raise ValueError("Invalid postcode")
 
         locationID = resLocation.json()[0].get("id")
         if input_date.month < 10:
@@ -93,7 +93,7 @@ class Calculator():
         resWeather = requests.get(url=weatherURL)
 
         if resWeather.status_code != 200:
-            return None
+            raise ValueError("Could not get weather data")
         sunrise_arr = resWeather.json().get("sunrise").split(":")
         sunrise = timedelta(hours=int(sunrise_arr[0]), minutes=int(sunrise_arr[1]), seconds=int(sunrise_arr[2]))
         sunset_arr = resWeather.json().get("sunset").split(":")
