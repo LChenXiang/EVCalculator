@@ -1,7 +1,7 @@
 from datetime import datetime, date, time, timedelta
 import holidays
 import requests
-
+import dateutil.relativedelta
 
 class Calculator():
     # you can choose to initialise variables here, if needed.
@@ -177,7 +177,67 @@ class Calculator():
     def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
                                postcode: str):
         # TODO: implement req 3
-        pass
+        """
+            solar insolation,   si
+            duration,           du (59 - x + 1)
+            daylight length,    dl
+            cloud cover,        cc
+            1) find reference data, means if given 20/05/2023, get reference data 20/05/2021
+            2) get sunrise and sunset time,dl check if charging hour was at daylight, get solar insolation, si
+            3) calculate the solar energy generated during daylight (a for loop based on day duration)
+                - calculate the solar energy generated based on hour (another for loop)
+                - get hourly cloud cover values, cc (o to 100)
+                - get the duration, du (minute/60)
+                - formula for this is si*1/dl * (1-cc/100) * 50 * 0.2 (in kWh)
+                - sum up the total solar energy generated for the day
+            4) calculate the solar energy generated for the same day in the preceding two years, repeat step 2 onward
+            5) estimate the solar energy generated as the mean of the three solar energy generated
+            6) sum up the total energy value for all days
+
+            concept
+            Past date: for loop each day of charging
+            Future date: nested loop:
+            total_power_all = 0
+            FOR 3 YEARS REFERENCE DATE:
+                total_power_year = 0
+                for each chargingday
+                    total_power_day = 0
+                    retrieve solar length
+                    generate solar charging hour (GET SUNRISE, SUNSET, AKA DAYLIGHT LENGTH)
+                  for each solar charging hour
+                      retrieve cloud cover
+                      total_power_hour calc
+                      total_power_day += totalpower_hour
+                  total_power_year += total_power_day
+              total_power_all += total_power_year
+            total_power = total_power_all / 3
+
+        """
+        # calculate reference date
+        day_gap = end_time_date.day - start_time_date.day
+        total_solar_across_day = 0
+        for day in range(day_gap,-1,-1):
+            current_year = datetime.datetime.now().year
+            x = end_time_date - day
+            gap = x.year - current_year
+            estimated_solar_mean = 0
+            for year in range(3):
+                reference_date = x - dateutil.relativedelta.relativedelta(years=(gap+year))
+                total_power = 0
+                dl = self.get_day_light_length(reference_date,postcode)
+                si = self.get_sun_hour(reference_date,postcode)
+
+                cloud_cover_list = self.get_cloud_cover(reference_date,postcode)
+                for hour in range(1):
+                    cc = cloud_cover_list[hour]
+                    du = (end_time_date.minute+1)/60 # duration calculation differ based on end or start
+                    generated_solar_energy = si * du / dl * (1-cc/100) * 50  * 0.2
+                    total_power = total_power + generated_solar_energy
+                estimated_solar_mean = estimated_solar_mean + total_power
+            estimated_solar_mean = estimated_solar_mean/3  
+            print(estimated_solar_mean) 
+            total_solar_across_day = total_solar_across_day + estimated_solar_mean
+        
 
     def calculate_solar_energy(self, start_time_date: datetime, end_time_date: datetime,
                                postcode: str):
@@ -191,6 +251,7 @@ class Calculator():
                                                                      postcode)
 
     def get_charging_time_str(self, charge_hours: float):
+
         hours = int(charge_hours)
         decimal_minutes = (charge_hours % 1) * 60
         minutes = int(decimal_minutes)
