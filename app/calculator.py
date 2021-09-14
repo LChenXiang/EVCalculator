@@ -214,8 +214,21 @@ class Calculator():
                 return_str += str(seconds) + " seconds "
         return return_str.strip()
 
+    def get_state(self, postcode: str) -> str:
+        locationURL = "http://118.138.246.158/api/v1/location?postcode="
+        requestLocationURL = locationURL + postcode
+        resLocation = requests.get(url=requestLocationURL)
+        if resLocation.status_code != 200:
+            raise ValueError("Invalid postcode")
+        if len(resLocation.json()) == 0:
+            raise ValueError("Invalid postcode")
+        state = resLocation.json()[0].get("state")
+        return state
+
+
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: int, power: int, capacity: int):
+                               start_state: int, base_price: int, power: int, capacity: int, postcode: str) -> float:
+        state = self.get_state(postcode)
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
         total_nonHoliday_peak = 0
