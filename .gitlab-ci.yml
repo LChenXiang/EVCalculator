@@ -9,6 +9,7 @@ test:
         - pip3 install --upgrade pip
         - pip3 install -r requirements.txt
         - pip3 install coverage
+        - cd test
         - coverage run --source=app --branch -m unittest discover
         - coverage report -m
         - coverage html -d coverage_reports
