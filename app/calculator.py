@@ -6,7 +6,6 @@ import requests
 class Calculator():
     # you can choose to initialise variables here, if needed.
     def __init__(self):
-        self.australian_holiday = holidays.Australia()
         self.configuration = [[2, 5],
                               [3.6, 7.5],
                               [7.2, 10],
@@ -41,9 +40,10 @@ class Calculator():
     def get_configuration(self, config):
         return self.configuration[config - 1]
 
-    def is_holiday(self, start_date: date):
+    def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
-        return is_weekday or start_date in self.australian_holiday
+        state_holiday = holidays.Australia(prov=state)
+        return is_weekday or start_date in state_holiday
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)
@@ -214,8 +214,21 @@ class Calculator():
                 return_str += str(seconds) + " seconds "
         return return_str.strip()
 
+    def get_state(self, postcode: str) -> str:
+        locationURL = "http://118.138.246.158/api/v1/location?postcode="
+        requestLocationURL = locationURL + postcode
+        resLocation = requests.get(url=requestLocationURL)
+        if resLocation.status_code != 200:
+            raise ValueError("Invalid postcode")
+        if len(resLocation.json()) == 0:
+            raise ValueError("Invalid postcode")
+        state = resLocation.json()[0].get("state")
+        return state
+
+
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: int, power: int, capacity: int):
+                               start_state: int, base_price: int, power: int, capacity: int, postcode: str) -> float:
+        state = self.get_state(postcode)
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
         total_nonHoliday_peak = 0
@@ -225,7 +238,7 @@ class Calculator():
 
         reachedEnd = False
         while (not reachedEnd):
-            holiday_surcharge = self.is_holiday(current_date_time.date())
+            holiday_surcharge = self.is_holiday(current_date_time.date(), state)
             peak = self.is_peak(current_date_time.time())
             added_time = timedelta(hours=1)
             new_datetime = min(end_time, (current_date_time + added_time).replace(minute=0, second=0, microsecond=0))
