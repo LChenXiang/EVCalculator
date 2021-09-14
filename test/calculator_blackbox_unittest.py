@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(1, "..")
-
 from app.calculator import *
 import unittest
 from datetime import time, date
