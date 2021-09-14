@@ -9,6 +9,7 @@ test:
         - pip3 install --upgrade pip
         - pip3 install -r requirements.txt
         - pip3 install coverage
+        - coverage erase
         - coverage run -a --source=app --branch -m unittest test/calculator_blackbox_unittest.py
         - coverage run -a --source=app --branch -m unittest test/calculator_solarapi_unittest.py
         - coverage run -a --source=app --branch -m unittest test/state_holiday_unittest.py
