@@ -7,6 +7,7 @@ class TestCalculator(unittest.TestCase):
 
     def setUp(self) -> None:
         self.calculator = Calculator()
+        self.postcode = "4000"
 
     def test_tc1_cost(self):
         config = 1
@@ -24,7 +25,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -57,7 +58,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -90,7 +91,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -123,7 +124,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -157,7 +158,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -190,7 +191,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -223,7 +224,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -256,7 +257,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -289,7 +290,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -322,7 +323,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -355,7 +356,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -388,7 +389,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -422,7 +423,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -455,7 +456,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -488,7 +489,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -521,7 +522,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -554,7 +555,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -587,7 +588,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -620,7 +621,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
@@ -653,7 +654,7 @@ class TestCalculator(unittest.TestCase):
         final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
-                                                            capacity=battery_capacity)
+                                                            capacity=battery_capacity, postcode=self.postcode)
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost,final_cost)))
