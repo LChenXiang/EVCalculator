@@ -175,7 +175,7 @@ class Calculator():
         pass
 
     def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
-                               postcode: str):
+                                      postcode: str):
         # TODO: implement req 3
         pass
 
@@ -183,12 +183,12 @@ class Calculator():
                                postcode: str):
         minus_two_day = timedelta(days=2)
         current_date = datetime.now().date()
-        if start_time_date.date() > (current_date-minus_two_day):
+        if start_time_date.date() > (current_date - minus_two_day):
             return self.calculate_solar_energy_future(start_time_date, end_time_date, postcode)
         else:
             return self.calculate_solar_energy_past_to_currentday_minus_two(start_time_date,
-                                                                     end_time_date,
-                                                                     postcode)
+                                                                            end_time_date,
+                                                                            postcode)
 
     def get_charging_time_str(self, charge_hours: float):
         hours = int(charge_hours)
@@ -225,9 +225,9 @@ class Calculator():
         state = resLocation.json()[0].get("state")
         return state
 
-
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: int, power: int, capacity: int, postcode: str) -> float:
+                               start_state: int, base_price: int, power: int, capacity: int,
+                               postcode: str, solar_energy: float = 0) -> float:
         state = self.get_state(postcode)
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
@@ -235,6 +235,7 @@ class Calculator():
         total_nonHoliday_nonPeak = 0
 
         current_date_time = datetime.combine(start_date, start_time)
+        remaining_solar_energy = solar_energy
 
         reachedEnd = False
         while (not reachedEnd):
@@ -242,18 +243,22 @@ class Calculator():
             peak = self.is_peak(current_date_time.time())
             added_time = timedelta(hours=1)
             new_datetime = min(end_time, (current_date_time + added_time).replace(minute=0, second=0, microsecond=0))
-            difference_time_minutes = (new_datetime - current_date_time).total_seconds() / 60
+            difference_time_minutes = max(0, ((new_datetime - current_date_time).total_seconds() / 60))
+            power_from_this_charge = (difference_time_minutes) / 60 * power
+            power_after_deduct = max(0, power_from_this_charge-remaining_solar_energy)
+            remaining_solar_energy = max(0, remaining_solar_energy-power_from_this_charge)
+            time_remaining_charge = power_after_deduct / power * 60
 
             if holiday_surcharge:
                 if peak:
-                    total_holiday_peak += difference_time_minutes
+                    total_holiday_peak += time_remaining_charge
                 else:
-                    total_holiday_nonPeak += difference_time_minutes
+                    total_holiday_nonPeak += time_remaining_charge
             else:
                 if peak:
-                    total_nonHoliday_peak += difference_time_minutes
+                    total_nonHoliday_peak += time_remaining_charge
                 else:
-                    total_nonHoliday_nonPeak += difference_time_minutes
+                    total_nonHoliday_nonPeak += time_remaining_charge
 
             if new_datetime == end_time:
                 reachedEnd = True
