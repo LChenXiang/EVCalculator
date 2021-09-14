@@ -8,6 +8,9 @@ test:
         - echo "Testing"
         - pip3 install --upgrade pip
         - pip3 install -r requirements.txt
-        - python3 -m unittest test/calculator_blackbox_unittest.py
-        - python3 -m unittest test/calculator_solarapi_unittest.py
-        - python3 -m unittest test/state_holiday_unittest.py
+        - pip3 install coverage
+        - coverage run --source=app --branch -m unittest test/calculator_blackbox_unittest.py
+        - coverage run --source=app --branch -m unittest unittest test/calculator_solarapi_unittest.py
+        - coverage run --source=app --branch -m unittest test/state_holiday_unittest.py
+        - coverage report -m
+        - coverage html -d coverage_reports
