@@ -17,7 +17,7 @@ class Calculator():
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
-                         is_peak: bool, is_holiday: bool, base_price: float):
+                         is_peak: bool, is_holiday: bool, base_price: float) -> float:
         if is_peak:
             peak_modifier = 1
         else:
@@ -32,7 +32,7 @@ class Calculator():
         return cost
 
     # you may add more parameters if needed, you may also modify the formula.
-    def time_calculation(self, initial_state, final_state, capacity, power):
+    def time_calculation(self, initial_state: float, final_state: float, capacity: float, power: float) -> float:
         time = (final_state - initial_state) / 100 * capacity / power
         return time
 
@@ -245,8 +245,8 @@ class Calculator():
             new_datetime = min(end_time, (current_date_time + added_time).replace(minute=0, second=0, microsecond=0))
             difference_time_minutes = max(0, ((new_datetime - current_date_time).total_seconds() / 60))
             power_from_this_charge = (difference_time_minutes) / 60 * power
-            power_after_deduct = max(0, power_from_this_charge-remaining_solar_energy)
-            remaining_solar_energy = max(0, remaining_solar_energy-power_from_this_charge)
+            power_after_deduct = max(0, power_from_this_charge - remaining_solar_energy)
+            remaining_solar_energy = max(0, remaining_solar_energy - power_from_this_charge)
             time_remaining_charge = power_after_deduct / power * 60
 
             if holiday_surcharge:
