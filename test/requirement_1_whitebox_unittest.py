@@ -151,6 +151,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                       base_price=base_price)
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
+
     def test_whitebox_cost_calculation_tc4(self):
         initial_state = 20
         final_state = 40
@@ -166,6 +167,16 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
 
+    def test_whitebox_time_calculation_tc1(self):
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        expected_time = 5
+        power = 2
+        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        self.assertEqual(expected_time, charge_time, msg=("Expected %s, got %s instead" %
+                                                          (expected_time, charge_time)))
 
     def test_white_box_invalid_end_date(self):
         """
