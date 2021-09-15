@@ -223,6 +223,52 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         actual_out = self.calculator.is_peak(input_time)
         self.assertFalse(actual_out)
 
+    def test_whitebox_get_charging_time_str_tc1(self):
+        input_time = 0
+        expected_str = ""
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc2(self):
+        input_time = 1
+        expected_str = "1 hour"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc3(self):
+        input_time = 2
+        expected_str = "2 hours"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc4(self):
+        input_time = (1/60)
+        expected_str = "1 minute"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+    def test_whitebox_get_charging_time_str_tc5(self):
+        input_time = (2/60)
+        expected_str = "2 minutes"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc6(self):
+        input_time = (1/60)/60
+        expected_str = "1 second"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
+    def test_whitebox_get_charging_time_str_tc7(self):
+        input_time = (2/60/60)
+        expected_str = "2 seconds"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                          (expected_str, actual_str)))
 
     def test_white_box_invalid_end_date(self):
         """
