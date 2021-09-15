@@ -1,8 +1,6 @@
 from app.calculator import *
 import unittest
 from datetime import time, date
-import os
-os.chdir("../")
 
 class WhiteBoxCostCalculator(unittest.TestCase):
 
