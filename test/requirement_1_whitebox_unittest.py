@@ -105,8 +105,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
 
     def test_whitebox_cost_calculation_tc1(self):
         """
-        Path coverage test
-        :return:
+        Path coverage test case 1 for cost_calculation
         """
         initial_state = 20
         final_state = 40
@@ -123,6 +122,9 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                            % (expected_cost, final_cost)))
 
     def test_whitebox_cost_calculation_tc2(self):
+        """
+        Path coverage test case 2 for cost_calculation
+        """
         initial_state = 20
         final_state = 40
         capacity = 50
@@ -138,6 +140,9 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                            % (expected_cost, final_cost)))
 
     def test_whitebox_cost_calculation_tc3(self):
+        """
+        Path coverage test case 3 for cost_calculation
+        """
         initial_state = 20
         final_state = 40
         capacity = 50
@@ -153,6 +158,9 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                            % (expected_cost, final_cost)))
 
     def test_whitebox_cost_calculation_tc4(self):
+        """
+        Path coverage test case 4 for cost_calculation
+        """
         initial_state = 20
         final_state = 40
         capacity = 50
@@ -168,6 +176,9 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                            % (expected_cost, final_cost)))
 
     def test_whitebox_time_calculation_tc1(self):
+        """
+        Line coverage test case 1 for time_calculation
+        """
         battery_capacity = 50
         initial_charge = 20
         final_charge = 40
@@ -179,11 +190,38 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                           (expected_time, charge_time)))
 
     def test_whitebox_get_configuration_tc1(self):
+        """
+        Line coverage test case 1 for get_configuration
+        """
         configuration = 1
         expected_out = [2,5]
         actual_out = self.calculator.get_configuration(configuration)
         self.assertEqual(expected_out, actual_out, msg=("Expected %s, got %s instead" %
                                                           (expected_out, actual_out)))
+
+    def test_whitebox_is_peak_tc1(self):
+        """
+        Path coverage test case 1 for is_peak
+        """
+        input_time = time(8)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_peak_tc2(self):
+        """
+        Path coverage test case 2 for is_peak
+        """
+        input_time = time(19)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertFalse(actual_out)
+
+    def test_whitebox_is_peak_tc3(self):
+        """
+        Path coverage test case 2 for is_peak
+        """
+        input_time = time(4)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertFalse(actual_out)
 
 
     def test_white_box_invalid_end_date(self):
