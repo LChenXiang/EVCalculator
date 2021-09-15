@@ -204,12 +204,12 @@ class Calculator():
                 return_str += str(hours) + " hours "
         if minutes > 0:
             if minutes == 1:
-                return_str += str(minutes) + " minutes "
+                return_str += str(minutes) + " minute "
             else:
                 return_str += str(minutes) + " minutes "
         if seconds > 0:
             if seconds == 1:
-                return_str += str(seconds) + " seconds "
+                return_str += str(seconds) + " second "
             else:
                 return_str += str(seconds) + " seconds "
         return return_str.strip()
