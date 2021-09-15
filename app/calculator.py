@@ -14,6 +14,8 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
+        # TODO: Setup school holiday dictionary
+        #self.school_holidays = self.get_school_holiday_file("school_holidays/testdate4.txt")
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -39,6 +41,42 @@ class Calculator():
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
     def get_configuration(self, config):
         return self.configuration[config - 1]
+
+    def get_school_holiday_file(self, filename: str):
+        """
+        Opens a file and parses the range of date into dates and return the list of dates.
+        Used to get school holidays
+        :param filename: File to get the dates
+        :return: List of dates from the file.
+        """
+        file = open(filename, mode="r", encoding="utf-8")
+        list_of_dates = []
+        content = file.readlines()
+        for each in content:
+            dates = each.strip("\n").split("-")
+            if len(dates) != 2:
+                continue
+            start_date_arr = dates[0].split("/")
+            end_date_arr = dates[1].split("/")
+            if len(start_date_arr) != 3:
+                continue
+            if len(end_date_arr) != 3:
+                continue
+            start_date = date(day=int(start_date_arr[0]),month=int(start_date_arr[1]),year=int(start_date_arr[2]))
+            end_date = date(day=int(end_date_arr[0]),month=int(end_date_arr[1]),year=int(end_date_arr[2]))
+            if start_date > end_date:
+                continue
+            is_done = False
+            while not is_done:
+                list_of_dates.append(start_date)
+                add_day = timedelta(days=1)
+                start_date += add_day
+                if start_date > end_date:
+                    is_done = True
+        file.close()
+        return list_of_dates
+
+
 
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)

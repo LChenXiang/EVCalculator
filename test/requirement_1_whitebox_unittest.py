@@ -270,6 +270,30 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
                                                           (expected_str, actual_str)))
 
+    def test_whitebox_get_school_holiday_file_tc1(self):
+        filename = "testdate1.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc2(self):
+        filename = "testdate2.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc3(self):
+        filename = "testdate3.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc4(self):
+        filename = "testdate4.txt"
+        expected_out = [date(2021,6,3), date(2021,6,4), date(2021,6,5), date(2021,6,6)]
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out, msg="Expected %s, got %s instead" % (expected_out, actual_out))
+
     def test_white_box_invalid_end_date(self):
         """
         We will test what happens when the end date is earlier than the start date.
