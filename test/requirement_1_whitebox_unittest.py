@@ -2,6 +2,7 @@ from app.calculator import *
 import unittest
 from datetime import time, date
 
+
 class WhiteBoxCostCalculator(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -193,10 +194,10 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         Line coverage test case 1 for get_configuration
         """
         configuration = 1
-        expected_out = [2,5]
+        expected_out = [2, 5]
         actual_out = self.calculator.get_configuration(configuration)
         self.assertEqual(expected_out, actual_out, msg=("Expected %s, got %s instead" %
-                                                          (expected_out, actual_out)))
+                                                        (expected_out, actual_out)))
 
     def test_whitebox_is_peak_tc1(self):
         """
@@ -227,47 +228,49 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         expected_str = ""
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc2(self):
         input_time = 1
         expected_str = "1 hour"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc3(self):
         input_time = 2
         expected_str = "2 hours"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc4(self):
-        input_time = (1/60)
+        input_time = (1 / 60)
         expected_str = "1 minute"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
+
     def test_whitebox_get_charging_time_str_tc5(self):
-        input_time = (2/60)
+        input_time = (2 / 60)
         expected_str = "2 minutes"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc6(self):
-        input_time = (1/60)/60
+        input_time = (1 / 60) / 60
         expected_str = "1 second"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
+
     def test_whitebox_get_charging_time_str_tc7(self):
-        input_time = (2/60/60)
+        input_time = (2 / 60 / 60)
         expected_str = "2 seconds"
         actual_str = self.calculator.get_charging_time_str(input_time)
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
-                                                          (expected_str, actual_str)))
+                                                        (expected_str, actual_str)))
 
     def test_whitebox_get_school_holiday_file_tc1(self):
         filename = "school_holidays/testdate1.txt"
@@ -289,9 +292,27 @@ class WhiteBoxCostCalculator(unittest.TestCase):
 
     def test_whitebox_get_school_holiday_file_tc4(self):
         filename = "school_holidays/testdate4.txt"
-        expected_out = [date(2021,6,3), date(2021,6,4), date(2021,6,5), date(2021,6,6)]
+        expected_out = [date(2021, 6, 3), date(2021, 6, 4), date(2021, 6, 5), date(2021, 6, 6)]
         actual_out = self.calculator.get_school_holiday_file(filename)
         self.assertEqual(expected_out, actual_out, msg="Expected %s, got %s instead" % (expected_out, actual_out))
+
+    def test_whitebox_is_holiday_tc1(self):
+        in_date = date(2021, 9, 15)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc2(self):
+        in_date = date(2021, 1, 1)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc3(self):
+        in_date = date(2021, 9, 18)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertFalse(actual_out)
 
     def test_white_box_invalid_end_date(self):
         """
