@@ -178,6 +178,14 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertEqual(expected_time, charge_time, msg=("Expected %s, got %s instead" %
                                                           (expected_time, charge_time)))
 
+    def test_whitebox_get_configuration_tc1(self):
+        configuration = 1
+        expected_out = [2,5]
+        actual_out = self.calculator.get_configuration(configuration)
+        self.assertEqual(expected_out, actual_out, msg=("Expected %s, got %s instead" %
+                                                          (expected_out, actual_out)))
+
+
     def test_white_box_invalid_end_date(self):
         """
         We will test what happens when the end date is earlier than the start date.
