@@ -274,29 +274,29 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
                                                         (expected_str, actual_str)))
 
-    def test_whitebox_get_school_holiday_file_tc1(self):
-        filename = "school_holidays/testdate1.txt"
-        expected_out = []
-        actual_out = self.calculator.get_school_holiday_file(filename)
-        self.assertEqual(expected_out, actual_out)
-
-    def test_whitebox_get_school_holiday_file_tc2(self):
-        filename = "school_holidays/testdate2.txt"
-        expected_out = []
-        actual_out = self.calculator.get_school_holiday_file(filename)
-        self.assertEqual(expected_out, actual_out)
-
-    def test_whitebox_get_school_holiday_file_tc3(self):
-        filename = "school_holidays/testdate3.txt"
-        expected_out = []
-        actual_out = self.calculator.get_school_holiday_file(filename)
-        self.assertEqual(expected_out, actual_out)
-
-    def test_whitebox_get_school_holiday_file_tc4(self):
-        filename = "school_holidays/testdate4.txt"
-        expected_out = [date(2021, 6, 3), date(2021, 6, 4), date(2021, 6, 5), date(2021, 6, 6)]
-        actual_out = self.calculator.get_school_holiday_file(filename)
-        self.assertEqual(expected_out, actual_out, msg="Expected %s, got %s instead" % (expected_out, actual_out))
+    # def test_whitebox_get_school_holiday_file_tc1(self):
+    #     filename = "school_holidays/testdate1.txt"
+    #     expected_out = []
+    #     actual_out = self.calculator.get_school_holiday_file(filename)
+    #     self.assertEqual(expected_out, actual_out)
+    #
+    # def test_whitebox_get_school_holiday_file_tc2(self):
+    #     filename = "school_holidays/testdate2.txt"
+    #     expected_out = []
+    #     actual_out = self.calculator.get_school_holiday_file(filename)
+    #     self.assertEqual(expected_out, actual_out)
+    #
+    # def test_whitebox_get_school_holiday_file_tc3(self):
+    #     filename = "school_holidays/testdate3.txt"
+    #     expected_out = []
+    #     actual_out = self.calculator.get_school_holiday_file(filename)
+    #     self.assertEqual(expected_out, actual_out)
+    #
+    # def test_whitebox_get_school_holiday_file_tc4(self):
+    #     filename = "school_holidays/testdate4.txt"
+    #     expected_out = [date(2021, 6, 3), date(2021, 6, 4), date(2021, 6, 5), date(2021, 6, 6)]
+    #     actual_out = self.calculator.get_school_holiday_file(filename)
+    #     self.assertEqual(expected_out, actual_out, msg="Expected %s, got %s instead" % (expected_out, actual_out))
 
     def test_whitebox_is_holiday_tc1(self):
         in_date = date(2021, 9, 15)
@@ -310,13 +310,13 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         actual_out = self.calculator.is_holiday(in_date, state)
         self.assertTrue(actual_out)
 
-    def test_whitebox_is_holiday_tc3(self):
-        in_date = date(2021, 9, 18)
-        state = "ACT"
-        actual_out = self.calculator.is_holiday(in_date, state)
-        self.assertTrue(actual_out)
+    # def test_whitebox_is_holiday_tc3(self):
+    #     in_date = date(2021, 9, 18)
+    #     state = "ACT"
+    #     actual_out = self.calculator.is_holiday(in_date, state)
+    #     self.assertTrue(actual_out)
 
-    def test_whitebox_is_holiday_tc4(self):
+    def test_whitebox_is_holiday_tc3(self):
         in_date = date(2021, 8, 29)
         state = "ACT"
         actual_out = self.calculator.is_holiday(in_date, state)

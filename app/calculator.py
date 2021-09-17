@@ -14,16 +14,6 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
-        self.school_holidays = {
-            "ACT": self.get_school_holiday_file("school_holidays/ACT_sch_hols.txt"),
-            "NSW": self.get_school_holiday_file("school_holidays/NSW_sch_hols.txt"),
-            "NT": self.get_school_holiday_file("school_holidays/NT_sch_hols.txt"),
-            "QLD": self.get_school_holiday_file("school_holidays/QLD_sch_hols.txt"),
-            "SA": self.get_school_holiday_file("school_holidays/SA_sch_hols.txt"),
-            "TAS": self.get_school_holiday_file("school_holidays/TAS_sch_hols.txt"),
-            "VIC": self.get_school_holiday_file("school_holidays/VIC_sch_hols.txt"),
-            "WA": self.get_school_holiday_file("school_holidays/WA_sch_hols.txt")
-        }
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -50,46 +40,46 @@ class Calculator():
     def get_configuration(self, config):
         return self.configuration[config - 1]
 
-    def get_school_holiday_file(self, filename: str):
-        """
-        Opens a file and parses the range of date into dates and return the list of dates.
-        Used to get school holidays
-        :param filename: File to get the dates
-        :return: List of dates from the file.
-        """
-        file = open(filename, mode="r", encoding="utf-8")
-        list_of_dates = []
-        content = file.readlines()
-        for each in content:
-            dates = each.strip("\n").split("-")
-            if len(dates) != 2:
-                continue
-            start_date_arr = dates[0].split("/")
-            end_date_arr = dates[1].split("/")
-            if len(start_date_arr) != 3:
-                continue
-            if len(end_date_arr) != 3:
-                continue
-            start_date = date(day=int(start_date_arr[0]),month=int(start_date_arr[1]),year=int(start_date_arr[2]))
-            end_date = date(day=int(end_date_arr[0]),month=int(end_date_arr[1]),year=int(end_date_arr[2]))
-            if start_date > end_date:
-                continue
-            is_done = False
-            while not is_done:
-                list_of_dates.append(start_date)
-                add_day = timedelta(days=1)
-                start_date += add_day
-                if start_date > end_date:
-                    is_done = True
-        file.close()
-        return list_of_dates
+    # def get_school_holiday_file(self, filename: str):
+    #     """
+    #     Opens a file and parses the range of date into dates and return the list of dates.
+    #     Used to get school holidays
+    #     :param filename: File to get the dates
+    #     :return: List of dates from the file.
+    #     """
+    #     file = open(filename, mode="r", encoding="utf-8")
+    #     list_of_dates = []
+    #     content = file.readlines()
+    #     for each in content:
+    #         dates = each.strip("\n").split("-")
+    #         if len(dates) != 2:
+    #             continue
+    #         start_date_arr = dates[0].split("/")
+    #         end_date_arr = dates[1].split("/")
+    #         if len(start_date_arr) != 3:
+    #             continue
+    #         if len(end_date_arr) != 3:
+    #             continue
+    #         start_date = date(day=int(start_date_arr[0]),month=int(start_date_arr[1]),year=int(start_date_arr[2]))
+    #         end_date = date(day=int(end_date_arr[0]),month=int(end_date_arr[1]),year=int(end_date_arr[2]))
+    #         if start_date > end_date:
+    #             continue
+    #         is_done = False
+    #         while not is_done:
+    #             list_of_dates.append(start_date)
+    #             add_day = timedelta(days=1)
+    #             start_date += add_day
+    #             if start_date > end_date:
+    #                 is_done = True
+    #     file.close()
+    #     return list_of_dates
 
 
 
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
-        return is_weekday or start_date in state_holiday or start_date in self.school_holidays[state]
+        return is_weekday or start_date in state_holiday #or start_date in self.school_holidays[state]
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)
@@ -99,7 +89,7 @@ class Calculator():
     # def peak_period(self, start_time):
     #     pass
 
-    def get_end_time(self, start_date: date, start_time: time, charge_time: int):
+    def get_end_time(self, start_date: date, start_time: time, charge_time: float):
         starting_date_time = datetime.combine(start_date, start_time)
         time_to_add = timedelta(hours=charge_time)
         return starting_date_time + time_to_add
