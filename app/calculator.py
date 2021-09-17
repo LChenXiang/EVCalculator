@@ -16,7 +16,7 @@ class Calculator():
                               [350, 50]]
         self.school_holidays = {
             "ACT": self.get_school_holiday_file("school_holidays/ACT_sch_hols.txt"),
-            #"NSW": self.get_school_holiday_file("school_holidays/NSW_sch_hols.txt"),
+            "NSW": self.get_school_holiday_file("school_holidays/NSW_sch_hols.txt"),
             "NT": self.get_school_holiday_file("school_holidays/NT_sch_hols.txt"),
             "QLD": self.get_school_holiday_file("school_holidays/QLD_sch_hols.txt"),
             "SA": self.get_school_holiday_file("school_holidays/SA_sch_hols.txt"),
@@ -89,7 +89,7 @@ class Calculator():
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
-        return is_weekday or start_date in state_holiday
+        return is_weekday or start_date in state_holiday or start_date in self.school_holidays[state]
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)

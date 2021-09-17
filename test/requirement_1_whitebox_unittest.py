@@ -1,8 +1,10 @@
 from app.calculator import *
 import unittest
 from datetime import time, date
+import os
 
-
+# Uncomment for local test
+os.chdir("../")
 class WhiteBoxCostCalculator(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -312,6 +314,12 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         in_date = date(2021, 9, 18)
         state = "ACT"
         actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc4(self):
+        in_date = date(2021, 8, 29)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
         self.assertFalse(actual_out)
 
     def test_white_box_invalid_end_date(self):
@@ -512,3 +520,4 @@ if __name__ == "__main__":
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)
     # this will run the test suit
     unittest.TextTestRunner(verbosity=2).run(suit)
+
