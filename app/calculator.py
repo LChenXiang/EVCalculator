@@ -14,8 +14,17 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
-        # TODO: Setup school holiday dictionary
-        #self.school_holidays = self.get_school_holiday_file("school_holidays/testdate4.txt")
+        self.school_holidays = {
+            "ACT": self.get_school_holiday_file("school_holidays/ACT_sch_hols.txt"),
+            "NSW": self.get_school_holiday_file("school_holidays/NSW_sch_hols.txt"),
+            "NT": self.get_school_holiday_file("school_holidays/NT_sch_hols.txt"),
+            "QLD": self.get_school_holiday_file("school_holidays/QLD_sch_hols.txt"),
+            "SA": self.get_school_holiday_file("school_holidays/SA_sch_hols.txt"),
+            "TAS": self.get_school_holiday_file("school_holidays/TAS_sch_hols.txt"),
+            "VIC": self.get_school_holiday_file("school_holidays/VIC_sch_hols.txt"),
+            "WA": self.get_school_holiday_file("school_holidays/WA_sch_hols.txt")
+
+        }
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
