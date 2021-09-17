@@ -1,29 +1,51 @@
 from app.calculator import *
 import unittest
 from datetime import time, date
+import os
 
-
+# Uncomment for local test
+#os.chdir("../")
 class WhiteBoxCostCalculator(unittest.TestCase):
-    """
-    In the Cost calculator, we will use branch coverage here
-    This is because there are only some simple conditions that controls the flow of the code.
-    """
 
     def setUp(self) -> None:
         self.calculator = Calculator()
         self.postcode = "4000"
 
-    def test_white_box_branch_1(self):
+    def test_whitebox_totalcost_tc1(self):
         """
-        We will test the branch of non-holiday weekend on both peak and non peak hours.
+        Path coverage test case 1 for total_cost_calculation.
         """
-        config = 6
-        start_time = time(5, 30)
+        config = 1
+        start_time = time(8)
+        start_date = date(2021, 8, 24)
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        expected_cost = 0.55
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        end_time = self.calculator.get_end_time(start_date, start_time, charge_time)
+        final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode=self.postcode)
+
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_totalcost_tc2(self):
+        """
+        Path coverage test case 2 for total_cost_calculation.
+        """
+        config = 1
+        start_time = time(0)
         start_date = date(2021, 8, 21)
         battery_capacity = 50
         initial_charge = 20
-        final_charge = 80
-        expected_cost = 4.2
+        final_charge = 40
+        expected_cost = 0.25
         power = self.calculator.get_configuration(config)[0]
         base_cost = self.calculator.get_configuration(config)[1]
         charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
@@ -33,21 +55,43 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
                                                             capacity=battery_capacity, postcode=self.postcode)
-
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
 
-    def test_white_box_branch_2(self):
+    def test_whitebox_totalcost_tc3(self):
         """
-        We will test the branch of holidays/weekdays branch of peak and non-peak hours.
+        Path coverage test case 3 for total_cost_calculation.
         """
         config = 3
-        start_time = time(16, 50)
-        start_date = date(2021, 8, 20)
+        start_time = time(8)
+        start_date = date(2021, 8, 21)
         battery_capacity = 50
         initial_charge = 20
-        final_charge = 80
-        expected_cost = 2.11
+        final_charge = 40
+        expected_cost = 1
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        end_time = self.calculator.get_end_time(start_date, start_time, charge_time)
+        final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode=self.postcode)
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_totalcost_tc4(self):
+        """
+        Path coverage test case 4 for total_cost_calculation.
+        """
+        config = 4
+        start_time = time(0)
+        start_date = date(2021, 8, 24)
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        expected_cost = 0.69
         power = self.calculator.get_configuration(config)[0]
         base_cost = self.calculator.get_configuration(config)[1]
         charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
@@ -60,6 +104,223 @@ class WhiteBoxCostCalculator(unittest.TestCase):
 
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
+
+    def test_whitebox_cost_calculation_tc1(self):
+        """
+        Path coverage test case 1 for cost_calculation
+        """
+        initial_state = 20
+        final_state = 40
+        capacity = 50
+        base_price = 5
+        is_holiday = True
+        is_peak = True
+        expected_cost = 0.55
+
+        final_cost = self.calculator.cost_calculation(initial_state=initial_state, final_state=final_state,
+                                                      capacity=capacity, is_holiday=is_holiday, is_peak=is_peak,
+                                                      base_price=base_price)
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_cost_calculation_tc2(self):
+        """
+        Path coverage test case 2 for cost_calculation
+        """
+        initial_state = 20
+        final_state = 40
+        capacity = 50
+        base_price = 12.5
+        is_holiday = True
+        is_peak = False
+        expected_cost = 0.69
+
+        final_cost = self.calculator.cost_calculation(initial_state=initial_state, final_state=final_state,
+                                                      capacity=capacity, is_holiday=is_holiday, is_peak=is_peak,
+                                                      base_price=base_price)
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_cost_calculation_tc3(self):
+        """
+        Path coverage test case 3 for cost_calculation
+        """
+        initial_state = 20
+        final_state = 40
+        capacity = 50
+        base_price = 10
+        is_holiday = False
+        is_peak = True
+        expected_cost = 1
+
+        final_cost = self.calculator.cost_calculation(initial_state=initial_state, final_state=final_state,
+                                                      capacity=capacity, is_holiday=is_holiday, is_peak=is_peak,
+                                                      base_price=base_price)
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_cost_calculation_tc4(self):
+        """
+        Path coverage test case 4 for cost_calculation
+        """
+        initial_state = 20
+        final_state = 40
+        capacity = 50
+        base_price = 5
+        is_holiday = False
+        is_peak = False
+        expected_cost = 0.25
+
+        final_cost = self.calculator.cost_calculation(initial_state=initial_state, final_state=final_state,
+                                                      capacity=capacity, is_holiday=is_holiday, is_peak=is_peak,
+                                                      base_price=base_price)
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
+    def test_whitebox_time_calculation_tc1(self):
+        """
+        Line coverage test case 1 for time_calculation
+        """
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        expected_time = 5
+        power = 2
+        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        self.assertEqual(expected_time, charge_time, msg=("Expected %s, got %s instead" %
+                                                          (expected_time, charge_time)))
+
+    def test_whitebox_get_configuration_tc1(self):
+        """
+        Line coverage test case 1 for get_configuration
+        """
+        configuration = 1
+        expected_out = [2, 5]
+        actual_out = self.calculator.get_configuration(configuration)
+        self.assertEqual(expected_out, actual_out, msg=("Expected %s, got %s instead" %
+                                                        (expected_out, actual_out)))
+
+    def test_whitebox_is_peak_tc1(self):
+        """
+        Path coverage test case 1 for is_peak
+        """
+        input_time = time(8)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_peak_tc2(self):
+        """
+        Path coverage test case 2 for is_peak
+        """
+        input_time = time(19)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertFalse(actual_out)
+
+    def test_whitebox_is_peak_tc3(self):
+        """
+        Path coverage test case 2 for is_peak
+        """
+        input_time = time(4)
+        actual_out = self.calculator.is_peak(input_time)
+        self.assertFalse(actual_out)
+
+    def test_whitebox_get_charging_time_str_tc1(self):
+        input_time = 0
+        expected_str = ""
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc2(self):
+        input_time = 1
+        expected_str = "1 hour"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc3(self):
+        input_time = 2
+        expected_str = "2 hours"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc4(self):
+        input_time = (1 / 60)
+        expected_str = "1 minute"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc5(self):
+        input_time = (2 / 60)
+        expected_str = "2 minutes"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc6(self):
+        input_time = (1 / 60) / 60
+        expected_str = "1 second"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_charging_time_str_tc7(self):
+        input_time = (2 / 60 / 60)
+        expected_str = "2 seconds"
+        actual_str = self.calculator.get_charging_time_str(input_time)
+        self.assertEqual(expected_str, actual_str, msg=("Expected %s, got %s instead" %
+                                                        (expected_str, actual_str)))
+
+    def test_whitebox_get_school_holiday_file_tc1(self):
+        filename = "school_holidays/testdate1.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc2(self):
+        filename = "school_holidays/testdate2.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc3(self):
+        filename = "school_holidays/testdate3.txt"
+        expected_out = []
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out)
+
+    def test_whitebox_get_school_holiday_file_tc4(self):
+        filename = "school_holidays/testdate4.txt"
+        expected_out = [date(2021, 6, 3), date(2021, 6, 4), date(2021, 6, 5), date(2021, 6, 6)]
+        actual_out = self.calculator.get_school_holiday_file(filename)
+        self.assertEqual(expected_out, actual_out, msg="Expected %s, got %s instead" % (expected_out, actual_out))
+
+    def test_whitebox_is_holiday_tc1(self):
+        in_date = date(2021, 9, 15)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc2(self):
+        in_date = date(2021, 1, 1)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc3(self):
+        in_date = date(2021, 9, 18)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertTrue(actual_out)
+
+    def test_whitebox_is_holiday_tc4(self):
+        in_date = date(2021, 8, 29)
+        state = "ACT"
+        actual_out = self.calculator.is_holiday(in_date, state)
+        self.assertFalse(actual_out)
 
     def test_white_box_invalid_end_date(self):
         """
@@ -152,6 +413,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                    start_state=initial_charge, end_time=end_time,
                                                    base_price=base_cost, power=power, capacity=battery_capacity,
                                                    postcode=self.postcode)
+
     def test_whitebox_invalid_type_battery(self):
         """
         We will test what happens if we supply wrong battery capacity type
@@ -231,6 +493,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                    start_state=initial_charge, end_time=end_time,
                                                    base_price=base_cost, power=power, capacity=battery_capacity,
                                                    postcode=self.postcode)
+
     def test_whitebox_invalid_type_postcode(self):
         """
         We will test what happens if we supply wrong base_cost type
@@ -252,9 +515,9 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                    postcode=4000)
 
 
-
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)
     # this will run the test suit
     unittest.TextTestRunner(verbosity=2).run(suit)
+
