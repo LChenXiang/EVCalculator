@@ -4,7 +4,7 @@ from datetime import time, date
 import os
 
 # Uncomment for local test
-os.chdir("../")
+#os.chdir("../")
 class WhiteBoxCostCalculator(unittest.TestCase):
 
     def setUp(self) -> None:
