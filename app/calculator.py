@@ -434,6 +434,20 @@ class Calculator():
 
 if __name__ == "__main__":
     C = Calculator()
-    start_time = datetime.datetime(2024, 2, 29, 17, 30, 0, 0)
-    end_time = datetime.datetime(2024, 2, 29, 18, 15, 0, 0)
+    config = 1
+    start_time = time(17,30)
+    start_date = date(2022, 2, 22)
+    battery_capacity = 50
+    initial_charge = 20
+    final_charge = 60
+    expected_cost = 0.53
+    power = C.get_configuration(config)[0]
+    base_cost = C.get_configuration(config)[1]
+    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
     print(C.calculate_solar_energy_future(start_time, end_time, "7250"))
+    end_time = C.get_end_time(start_date, start_time, charge_time)
+    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode="7250")
