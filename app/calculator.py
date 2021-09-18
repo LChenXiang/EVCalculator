@@ -16,8 +16,8 @@ class Calculator():
                               [350, 50]]
 
     # you may add more parameters if needed, you may modify the formula also.
-    def cost_calculation(self, initial_state: float, final_state: float, capacity: int,
-                         is_peak: bool, is_holiday: bool, base_price: int):
+    def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
+                         is_peak: bool, is_holiday: bool, base_price: float) -> float:
         if is_peak:
             peak_modifier = 1
         else:
@@ -32,7 +32,7 @@ class Calculator():
         return cost
 
     # you may add more parameters if needed, you may also modify the formula.
-    def time_calculation(self, initial_state, final_state, capacity, power):
+    def time_calculation(self, initial_state: float, final_state: float, capacity: float, power: float) -> float:
         time = (final_state - initial_state) / 100 * capacity / power
         return time
 
@@ -40,10 +40,46 @@ class Calculator():
     def get_configuration(self, config):
         return self.configuration[config - 1]
 
+    # def get_school_holiday_file(self, filename: str):
+    #     """
+    #     Opens a file and parses the range of date into dates and return the list of dates.
+    #     Used to get school holidays
+    #     :param filename: File to get the dates
+    #     :return: List of dates from the file.
+    #     """
+    #     file = open(filename, mode="r", encoding="utf-8")
+    #     list_of_dates = []
+    #     content = file.readlines()
+    #     for each in content:
+    #         dates = each.strip("\n").split("-")
+    #         if len(dates) != 2:
+    #             continue
+    #         start_date_arr = dates[0].split("/")
+    #         end_date_arr = dates[1].split("/")
+    #         if len(start_date_arr) != 3:
+    #             continue
+    #         if len(end_date_arr) != 3:
+    #             continue
+    #         start_date = date(day=int(start_date_arr[0]),month=int(start_date_arr[1]),year=int(start_date_arr[2]))
+    #         end_date = date(day=int(end_date_arr[0]),month=int(end_date_arr[1]),year=int(end_date_arr[2]))
+    #         if start_date > end_date:
+    #             continue
+    #         is_done = False
+    #         while not is_done:
+    #             list_of_dates.append(start_date)
+    #             add_day = timedelta(days=1)
+    #             start_date += add_day
+    #             if start_date > end_date:
+    #                 is_done = True
+    #     file.close()
+    #     return list_of_dates
+
+
+
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
-        return is_weekday or start_date in state_holiday
+        return is_weekday or start_date in state_holiday #or start_date in self.school_holidays[state]
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)
@@ -53,7 +89,7 @@ class Calculator():
     # def peak_period(self, start_time):
     #     pass
 
-    def get_end_time(self, start_date: date, start_time: time, charge_time: int):
+    def get_end_time(self, start_date: date, start_time: time, charge_time: float):
         starting_date_time = datetime.combine(start_date, start_time)
         time_to_add = timedelta(hours=charge_time)
         return starting_date_time + time_to_add
@@ -265,12 +301,12 @@ class Calculator():
                 return_str += str(hours) + " hours "
         if minutes > 0:
             if minutes == 1:
-                return_str += str(minutes) + " minutes "
+                return_str += str(minutes) + " minute "
             else:
                 return_str += str(minutes) + " minutes "
         if seconds > 0:
             if seconds == 1:
-                return_str += str(seconds) + " seconds "
+                return_str += str(seconds) + " second "
             else:
                 return_str += str(seconds) + " seconds "
         return return_str.strip()
@@ -287,7 +323,7 @@ class Calculator():
         return state
 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: int, power: int, capacity: int,
+                               start_state: int, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: float = 0) -> float:
         state = self.get_state(postcode)
         total_holiday_peak = 0
@@ -306,8 +342,8 @@ class Calculator():
             new_datetime = min(end_time, (current_date_time + added_time).replace(minute=0, second=0, microsecond=0))
             difference_time_minutes = max(0, ((new_datetime - current_date_time).total_seconds() / 60))
             power_from_this_charge = (difference_time_minutes) / 60 * power
-            power_after_deduct = max(0, power_from_this_charge-remaining_solar_energy)
-            remaining_solar_energy = max(0, remaining_solar_energy-power_from_this_charge)
+            power_after_deduct = max(0, power_from_this_charge - remaining_solar_energy)
+            remaining_solar_energy = max(0, remaining_solar_energy - power_from_this_charge)
             time_remaining_charge = power_after_deduct / power * 60
 
             if holiday_surcharge:
