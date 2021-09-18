@@ -32,6 +32,7 @@ def operation_result():
         charger_configuration = int(request.form['ChargerConfiguration'])
         start_date_arr = (request.form['StartDate']).split("/")
         start_time_arr = (request.form['StartTime']).split(":")
+        postcode = request.form['PostCode']
 
         start_date = date(day=int(start_date_arr[0]), month=int(start_date_arr[1]), year=int(start_date_arr[2]))
         start_time = time(hour=int(start_time_arr[0]), minute=int(start_time_arr[1]))
@@ -43,7 +44,7 @@ def operation_result():
         time_charge = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
         end_time = calculator.get_end_time(start_date, start_time, time_charge)
         cost = calculator.total_cost_calculation(start_date, start_time, end_time, initial_charge,
-                                                 base_cost, power, battery_capacity)
+                                                 base_cost, power, battery_capacity, postcode)
         cost_str = "$%.2f" % cost
         time_str = calculator.get_charging_time_str(time_charge)
 
