@@ -1,5 +1,4 @@
 from datetime import datetime, date, time, timedelta
-import datetime
 import holidays
 import requests
 import dateutil.relativedelta
@@ -232,7 +231,7 @@ class Calculator():
         day_gap = end_time_date.day - start_time_date.day
         total_solar_across_day = 0
         for day in range(day_gap, -1, -1):
-            current_year = datetime.datetime.now().year
+            current_year = datetime.now().year
             current_date = end_time_date - timedelta(days=day)
             gap = current_date.year - current_year
             estimated_solar_mean = 0
