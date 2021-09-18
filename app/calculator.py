@@ -15,6 +15,9 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
+        self.EARLIEST_DATE = datetime(2008,7,1)
+        self.PANEL_SIZE = 50
+        self.PANEL_EFFICIENCY = 0.2
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: int,
@@ -172,7 +175,40 @@ class Calculator():
                                                             end_time_date: datetime, postcode: str):
         # TODO: implement req 2
         # RETURN 0 FOR THE DATE IF IT IS LESS THAN 1 JULY 2008!
-        pass
+        current_date = start_time_date.date()
+        next_date = timedelta(days=1)
+        total_energy = 0
+        while current_date <= end_time_date.date():
+            # if the date is before 01/07/2008, we do not count in the solar energy for that day, so we can exclude it
+            # by excluding these days it is the same as adding 0 multiple times
+            if current_date >= self.EARLIEST_DATE:
+
+                sun_hour = self.get_sun_hour(current_date, postcode) # retrieve solar insolation of this date (sun hour)
+
+                daylight_length = self.get_day_light_length(current_date, postcode) # retrieve daylight length of this date
+
+                # if this date is not starting date, means a day passed, so start at earliest time of the day
+                if current_date != start_time_date.date():
+                    start = time.min
+                else:
+                    start = start_time_date.time()   # starting date, so just take the starting time
+
+                # if this date is not end date, means we have to continue another day, so end at latest time of the day
+                if current_date != end_time_date.date():
+                    end = time.max
+                else:
+                    end = end_time_date.time()       # current date is end date, just use the end time of the end date
+
+                # calculate the solar energy duration using the decided start and end time
+                duration = self.get_solar_energy_duration(start, end, current_date, postcode)
+
+                # finally calculate solar energy generated for the day and add into total sum
+                total_energy += sun_hour * duration / daylight_length * self.PANEL_SIZE * self.PANEL_EFFICIENCY
+
+            # proceed to the next date until reaching end date
+            current_date += next_date
+
+        return total_energy
 
     def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
                                postcode: str):
