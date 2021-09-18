@@ -15,7 +15,7 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
-        self.selection = None  # this is for location ID selection
+        # self.selection = None  this is for location ID selection
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -74,12 +74,12 @@ class Calculator():
         if len(resLocation.json()) == 0:
             raise ValueError("Invalid postcode")
         # selection was made here
-        if not self.selection:
-            for i in range(len(resLocation.json())):
-                print(resLocation.json()[i].get("name"), i)
-            self.selection = int(input("select_id: "))
-        locationID = resLocation.json()[self.selection].get("id")
-        # locationID = resLocation.json()[0].get("id")
+        # if not self.selection:
+        #     for i in range(len(resLocation.json())):
+        #         print(resLocation.json()[i].get("name"), i)
+        #     self.selection = int(input("select_id: "))
+        # locationID = resLocation.json()[self.selection].get("id")
+        locationID = resLocation.json()[0].get("id")
         if input_date.month < 10:
             month = "0" + str(input_date.month)
         else:
@@ -237,8 +237,7 @@ class Calculator():
             estimated_solar_mean = 0
             # same day but from three years mean
             for year in range(3):
-                reference_date = current_date - \
-                    dateutil.relativedelta.relativedelta(years=(gap+year))
+                reference_date = current_date - dateutil.relativedelta.relativedelta(years=(gap+year))
 
                 start_time_point = None
                 end_time_point = None
@@ -434,7 +433,7 @@ class Calculator():
 if __name__ == "__main__":
     C = Calculator()
     config = 1
-    start_time = time(17,30)
+    start_time = time(17, 30)
     start_date = date(2022, 2, 22)
     battery_capacity = 50
     initial_charge = 20
@@ -443,10 +442,17 @@ if __name__ == "__main__":
     power = C.get_configuration(config)[0]
     base_cost = C.get_configuration(config)[1]
     charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-                                                       capacity=battery_capacity, power=power)
-    print(C.calculate_solar_energy_future(start_time, end_time, "7250"))
+                                     capacity=battery_capacity, power=power)
     end_time = C.get_end_time(start_date, start_time, charge_time)
     final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                                            start_state=initial_charge, end_time=end_time,
-                                                            base_price=base_cost, power=power,
-                                                            capacity=battery_capacity, postcode="7250")
+                                          start_state=initial_charge, end_time=end_time,
+                                          base_price=base_cost, power=power,
+                                          capacity=battery_capacity, postcode="7250")
+    print(final_cost)
+    solar_energy_generated = C.calculate_solar_energy_future(datetime.combine(start_date,start_time),end_time,"7250")
+    print(solar_energy_generated)
+    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                          start_state=initial_charge, end_time=end_time,
+                                          base_price=base_cost, power=power,
+                                          capacity=battery_capacity, postcode="7250", solar_energy=solar_energy_generated)
+    print(final_cost)
