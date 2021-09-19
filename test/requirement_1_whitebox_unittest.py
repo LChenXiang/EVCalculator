@@ -539,6 +539,10 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(AttributeError):
             self.calculator.is_holiday("1/12/2020", "ACT")
 
+    def test_invalid_time_is_peak(self):
+        with self.assertRaises(TypeError):
+            self.calculator.is_peak("00:00")
+
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)
