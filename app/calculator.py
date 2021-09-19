@@ -82,7 +82,6 @@ class Calculator():
             #         print(resLocation.json()[i].get("name"), i)
             #     self.selection = int(input("select_id: "))
             # locationID = resLocation.json()[self.selection].get("id")
-
             locationID = resLocation.json()[0].get("id")
             if input_date.month < 10:
                 month = "0" + str(input_date.month)
@@ -450,17 +449,23 @@ if __name__ == "__main__":
     expected_cost = 0.53
     power = C.get_configuration(config)[0]
     base_cost = C.get_configuration(config)[1]
+    
     charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
                                      capacity=battery_capacity, power=power)
     end_time = C.get_end_time(start_date, start_time, charge_time)
+    """
     final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
                                           start_state=initial_charge, end_time=end_time,
                                           base_price=base_cost, power=power,
                                           capacity=battery_capacity, postcode="7250")
-    print(final_cost)
+    print(final_cost)"""
     solar_energy_generated = C.calculate_solar_energy_future(datetime.combine(start_date,start_time),end_time,"7250")
+    print(solar_energy_generated)
+    """
     final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
                                           start_state=initial_charge, end_time=end_time,
                                           base_price=base_cost, power=power,
                                           capacity=battery_capacity, postcode="7250", solar_energy=solar_energy_generated)
     print(final_cost)
+    """
+    

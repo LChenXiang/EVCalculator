@@ -11,5 +11,6 @@ class TestFutureSolar(unittest.TestCase):
         self.assertEqual(self.calculator.cost_calculation("", "", "", "", ""), "")
 
     # you may create test suite if needed
+    # Test case needed for form
 if __name__ == "__main__":
     unittest.main()
