@@ -37,7 +37,9 @@ class Calculator():
         return time
 
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
-    def get_configuration(self, config):
+    def get_configuration(self, config: int):
+        if config < 1 or config > 8:
+            raise ValueError
         return self.configuration[config - 1]
 
     # def get_school_holiday_file(self, filename: str):
@@ -264,6 +266,7 @@ class Calculator():
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
                                start_state: int, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: float = 0) -> float:
+
         state = self.get_state(postcode)
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
