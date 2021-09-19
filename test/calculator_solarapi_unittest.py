@@ -133,11 +133,37 @@ class TestCloudCover(unittest.TestCase):
         res = self.calculator.get_cloud_cover(input_date, postcode)
         self.assertEqual(res, excepted_list, msg=("Excepted %s, got %s" % (excepted_list, res)))
 
+class TestGetWeatherData(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calculator = Calculator()
+
+    def test_invalid_postcode_get_weather_data_tc1(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_weather_data(date(2021, 8, 1), "000")
+
+
+    def test_invalid_postcode_get_weather_data_tc2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_weather_data(date(2021, 8, 1), "0000")
+
+
+    def test_invalid_date_get_weather_data_tc3(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_weather_data(date(2000, 1, 1), "4000")
+
+
+    def test_month_greater_10_get_weather_data_tc3(self):
+        res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+        self.assertEqual(res.json().get("date"), "2019-12-01")
+
 
 if __name__ == "__main__":
     # create the test suit from the cases above.
     dayLightSuit = unittest.TestLoader().loadTestsFromTestCase(TestDaylightLength)
     sunHoursSuit = unittest.TestLoader().loadTestsFromTestCase(TestSunHours)
+    weather_data_suit = unittest.TestLoader().loadTestsFromTestCase(TestGetWeatherData)
     # this will run the test suit
     unittest.TextTestRunner(verbosity=2).run(sunHoursSuit)
     unittest.TextTestRunner(verbosity=2).run(dayLightSuit)
+    unittest.TextTestRunner(verbosity=2).run(weather_data_suit)

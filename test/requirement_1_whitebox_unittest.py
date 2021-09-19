@@ -663,12 +663,16 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                 capacity=battery_capacity, postcode=self.postcode,
                                                                 solar_energy=-1)
     def test_invalid_postcode_get_state_tc1(self):
+        # Test invalid postcode
         with self.assertRaises(ValueError):
             self.calculator.get_state("000")
 
     def test_invalid_postcode_get_state_tc2(self):
+        # Test invalid postcode
         with self.assertRaises(ValueError):
             self.calculator.get_state("0000")
+
+
 
 if __name__ == "__main__":
     # create the test suit from the cases above.
