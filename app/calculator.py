@@ -20,7 +20,7 @@ class Calculator():
                          is_peak: bool, is_holiday: bool, base_price: float) -> float:
         if initial_state < 0 or initial_state > 100:
             raise ValueError
-        if final_state <= initial_state or final_state > 100:
+        if final_state < initial_state or final_state > 100:
             raise ValueError
         if capacity < 0:
             raise ValueError
@@ -44,7 +44,7 @@ class Calculator():
     def time_calculation(self, initial_state: float, final_state: float, capacity: float, power: float) -> float:
         if initial_state < 0 or initial_state > 100:
             raise ValueError
-        if final_state <= initial_state or final_state > 100:
+        if final_state < initial_state or final_state > 100:
             raise ValueError
         if capacity < 0:
             raise ValueError
