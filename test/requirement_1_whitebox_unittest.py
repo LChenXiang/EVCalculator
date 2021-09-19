@@ -559,6 +559,88 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_charging_time_str(-1)
 
+    def test_invalid_initial_state_total_cost(self):
+        config = 6
+        start_time = time(0)
+        start_date = date(2021, 8, 21)
+        battery_capacity = 50
+        initial_charge = -1
+        final_charge = 80
+        expected_cost = 0
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        end_time = datetime(2020, 8, 21, 5, 30)
+        with self.assertRaises(ValueError):
+            final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode=self.postcode)
+    def test_invalid_base_price_total_cost(self):
+        config = 6
+        start_time = time(0)
+        start_date = date(2021, 8, 21)
+        battery_capacity = 50
+        initial_charge = 0
+        final_charge = 80
+        expected_cost = 0
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = -1
+        end_time = datetime(2020, 8, 21, 5, 30)
+        with self.assertRaises(ValueError):
+            final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode=self.postcode)
+    def test_invalid_power_total_cost(self):
+        config = 6
+        start_time = time(0)
+        start_date = date(2021, 8, 21)
+        battery_capacity = 50
+        initial_charge = 0
+        final_charge = 80
+        expected_cost = 0
+        power = -1
+        base_cost = 10
+        end_time = datetime(2020, 8, 21, 5, 30)
+        with self.assertRaises(ValueError):
+            final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode=self.postcode)
+    def test_invalid_capacity_total_cost(self):
+        config = 6
+        start_time = time(0)
+        start_date = date(2021, 8, 21)
+        battery_capacity = 0
+        initial_charge = 0
+        final_charge = 80
+        expected_cost = 0
+        power = -1
+        base_cost = 10
+        end_time = datetime(2020, 8, 21, 5, 30)
+        with self.assertRaises(ValueError):
+            final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode=self.postcode)
+    def test_invalid_solar_energy_total_cost(self):
+        config = 6
+        start_time = time(0)
+        start_date = date(2021, 8, 21)
+        battery_capacity = 0
+        initial_charge = 0
+        final_charge = 80
+        expected_cost = 0
+        power = 10
+        base_cost = 10
+        end_time = datetime(2020, 8, 21, 5, 30)
+        with self.assertRaises(ValueError):
+            final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode=self.postcode,
+                                                                solar_energy=-1)
+
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)

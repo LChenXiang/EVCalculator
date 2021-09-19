@@ -287,8 +287,18 @@ class Calculator():
         return state
 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: float, power: float, capacity: float,
+                               start_state: float, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: float = 0) -> float:
+        if start_state < 0 or start_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if power < 0:
+            raise ValueError
+        if base_price < 0:
+            raise ValueError
+        if solar_energy < 0:
+            raise ValueError
 
         state = self.get_state(postcode)
         total_holiday_peak = 0
