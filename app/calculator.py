@@ -111,6 +111,8 @@ class Calculator():
     #     pass
 
     def get_end_time(self, start_date: date, start_time: time, charge_time: float):
+        if charge_time < 0:
+            raise ValueError
         starting_date_time = datetime.combine(start_date, start_time)
         time_to_add = timedelta(hours=charge_time)
         return starting_date_time + time_to_add
