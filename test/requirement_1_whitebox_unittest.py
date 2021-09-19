@@ -531,6 +531,13 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.time_calculation(20, 40, 100, -100)
 
+    def test_invalid_state_is_holiday(self):
+        with self.assertRaises(ValueError):
+            self.calculator.is_holiday(date(2020,12,1), "LOL")
+
+    def test_invalid_date_is_holiday(self):
+        with self.assertRaises(AttributeError):
+            self.calculator.is_holiday("1/12/2020", "ACT")
 
 if __name__ == "__main__":
     # create the test suit from the cases above.

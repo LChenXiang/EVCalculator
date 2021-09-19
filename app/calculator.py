@@ -14,6 +14,7 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
+        self.valid_states = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -94,12 +95,12 @@ class Calculator():
     #     file.close()
     #     return list_of_dates
 
-
-
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
-        return is_weekday or start_date in state_holiday #or start_date in self.school_holidays[state]
+        if state not in self.valid_states:
+            raise ValueError
+        return is_weekday or start_date in state_holiday  # or start_date in self.school_holidays[state]
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)
