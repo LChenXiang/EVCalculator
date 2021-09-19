@@ -3,8 +3,9 @@ import unittest
 from datetime import time, date
 import os
 
+
 # Uncomment for local test
-#os.chdir("../")
+# os.chdir("../")
 class WhiteBoxCostCalculator(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -483,6 +484,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                    start_state=initial_charge, end_time=end_time,
                                                    base_price=base_cost, power=power, capacity=battery_capacity,
                                                    postcode=4000)
+
     def test_whitebox_get_config_tc1(self):
         """
         Test boundary < 1
@@ -513,9 +515,25 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.cost_calculation(20, 30, -100, True, True, -5)
 
+    def test_invalid_time_calc_tc1(self):
+        with self.assertRaises(ValueError):
+            self.calculator.time_calculation(-1, 100, 100, 100)
+
+    def test_invalid_time_calc_tc2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.time_calculation(20, 19, 100, 100)
+
+    def test_invalid_time_calc_tc3(self):
+        with self.assertRaises(ValueError):
+            self.calculator.time_calculation(20, 40, -100, 100)
+
+    def test_invalid_time_calc_tc4(self):
+        with self.assertRaises(ValueError):
+            self.calculator.time_calculation(20, 40, 100, -100)
+
+
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)
     # this will run the test suit
     unittest.TextTestRunner(verbosity=2).run(suit)
-

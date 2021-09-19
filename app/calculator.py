@@ -42,6 +42,15 @@ class Calculator():
 
     # you may add more parameters if needed, you may also modify the formula.
     def time_calculation(self, initial_state: float, final_state: float, capacity: float, power: float) -> float:
+        if initial_state < 0 or initial_state > 100:
+            raise ValueError
+        if final_state <= initial_state or final_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if power < 0:
+            raise ValueError
+
         time = (final_state - initial_state) / 100 * capacity / power
         return time
 
