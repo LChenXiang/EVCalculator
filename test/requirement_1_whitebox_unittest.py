@@ -555,6 +555,10 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.calculator.get_end_time(date(2020,2,1), "00:00", 10)
 
+    def test_invalid_get_charging_str(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_charging_time_str(-1)
+
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)

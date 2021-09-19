@@ -254,6 +254,8 @@ class Calculator():
         decimal_minutes = (charge_hours % 1) * 60
         minutes = int(decimal_minutes)
         seconds = int((decimal_minutes % 1) * 60)
+        if charge_hours < 0:
+            raise ValueError
 
         return_str = ""
         if hours > 0:
