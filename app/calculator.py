@@ -14,10 +14,20 @@ class Calculator():
                               [36, 20],
                               [90, 30],
                               [350, 50]]
+        self.valid_states = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
                          is_peak: bool, is_holiday: bool, base_price: float) -> float:
+        if initial_state < 0 or initial_state > 100:
+            raise ValueError
+        if final_state < initial_state or final_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if base_price < 0:
+            raise ValueError
+
         if is_peak:
             peak_modifier = 1
         else:
@@ -33,11 +43,22 @@ class Calculator():
 
     # you may add more parameters if needed, you may also modify the formula.
     def time_calculation(self, initial_state: float, final_state: float, capacity: float, power: float) -> float:
+        if initial_state < 0 or initial_state > 100:
+            raise ValueError
+        if final_state < initial_state or final_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if power < 0:
+            raise ValueError
+
         time = (final_state - initial_state) / 100 * capacity / power
         return time
 
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
-    def get_configuration(self, config):
+    def get_configuration(self, config: int):
+        if config < 1 or config > 8:
+            raise ValueError
         return self.configuration[config - 1]
 
     # def get_school_holiday_file(self, filename: str):
@@ -74,12 +95,12 @@ class Calculator():
     #     file.close()
     #     return list_of_dates
 
-
-
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
-        return is_weekday or start_date in state_holiday #or start_date in self.school_holidays[state]
+        if state not in self.valid_states:
+            raise ValueError
+        return is_weekday or start_date in state_holiday  # or start_date in self.school_holidays[state]
 
     def is_peak(self, start_time: time) -> bool:
         left_peak = time(6)
@@ -90,6 +111,8 @@ class Calculator():
     #     pass
 
     def get_end_time(self, start_date: date, start_time: time, charge_time: float):
+        if charge_time < 0:
+            raise ValueError
         starting_date_time = datetime.combine(start_date, start_time)
         time_to_add = timedelta(hours=charge_time)
         return starting_date_time + time_to_add
@@ -231,6 +254,8 @@ class Calculator():
         decimal_minutes = (charge_hours % 1) * 60
         minutes = int(decimal_minutes)
         seconds = int((decimal_minutes % 1) * 60)
+        if charge_hours < 0:
+            raise ValueError
 
         return_str = ""
         if hours > 0:
@@ -262,8 +287,19 @@ class Calculator():
         return state
 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
-                               start_state: int, base_price: float, power: float, capacity: float,
+                               start_state: float, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: float = 0) -> float:
+        if start_state < 0 or start_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if power < 0:
+            raise ValueError
+        if base_price < 0:
+            raise ValueError
+        if solar_energy < 0:
+            raise ValueError
+
         state = self.get_state(postcode)
         total_holiday_peak = 0
         total_holiday_nonPeak = 0
