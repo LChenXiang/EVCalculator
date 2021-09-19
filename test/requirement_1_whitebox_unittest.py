@@ -500,66 +500,84 @@ class WhiteBoxCostCalculator(unittest.TestCase):
             self.calculator.get_configuration(9)
 
     def test_invalid_cost_calc_tc1(self):
+        """
+        Test initial state < 0
+        """
         with self.assertRaises(ValueError):
             self.calculator.cost_calculation(-1, 100, 100, True, True, 10)
 
     def test_invalid_cost_calc_tc2(self):
+        # Test final state < initial state
         with self.assertRaises(ValueError):
             self.calculator.cost_calculation(20, 19, 100, True, True, 10)
 
     def test_invalid_cost_calc_tc3(self):
+        # Test capacity < 0
         with self.assertRaises(ValueError):
             self.calculator.cost_calculation(20, 30, -100, True, True, 10)
 
     def test_invalid_cost_calc_tc4(self):
+        # Test base price < 0
         with self.assertRaises(ValueError):
             self.calculator.cost_calculation(20, 30, 100, True, True, -5)
 
     def test_invalid_time_calc_tc1(self):
+        # test initial state < 0
         with self.assertRaises(ValueError):
             self.calculator.time_calculation(-1, 100, 100, 100)
 
     def test_invalid_time_calc_tc2(self):
+        # test final state < initial state
         with self.assertRaises(ValueError):
             self.calculator.time_calculation(20, 19, 100, 100)
 
     def test_invalid_time_calc_tc3(self):
+        # test capacity < 0
         with self.assertRaises(ValueError):
             self.calculator.time_calculation(20, 40, -100, 100)
 
     def test_invalid_time_calc_tc4(self):
+        # test power < 0
         with self.assertRaises(ValueError):
             self.calculator.time_calculation(20, 40, 100, -100)
 
     def test_invalid_state_is_holiday(self):
+        # test invalid state input
         with self.assertRaises(ValueError):
             self.calculator.is_holiday(date(2020,12,1), "LOL")
 
     def test_invalid_date_is_holiday(self):
+        # test invalid date input
         with self.assertRaises(AttributeError):
             self.calculator.is_holiday("1/12/2020", "ACT")
 
     def test_invalid_time_is_peak(self):
+        # test invalid time input
         with self.assertRaises(TypeError):
             self.calculator.is_peak("00:00")
 
     def test_invalid_charge_time_get_end_time(self):
+        # test invalid charge_hours, < 0
         with self.assertRaises(ValueError):
             self.calculator.get_end_time(date(2020,2,1), time(0), -1)
 
     def test_invalid_date_get_end_time(self):
+        # test invalid date input
         with self.assertRaises(TypeError):
             self.calculator.get_end_time("1/2/2021", time(0), 10)
 
     def test_invalid_time_get_end_time(self):
+        # test invalid time input
         with self.assertRaises(TypeError):
             self.calculator.get_end_time(date(2020,2,1), "00:00", 10)
 
     def test_invalid_get_charging_str(self):
+        # test invalid input hours
         with self.assertRaises(ValueError):
             self.calculator.get_charging_time_str(-1)
 
     def test_invalid_initial_state_total_cost(self):
+        # test invalid initial state
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
@@ -576,6 +594,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode=self.postcode)
     def test_invalid_base_price_total_cost(self):
+        # test invalid base price
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
@@ -592,6 +611,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode=self.postcode)
     def test_invalid_power_total_cost(self):
+        # test invalid power
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
@@ -608,6 +628,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode=self.postcode)
     def test_invalid_capacity_total_cost(self):
+        # test invalid capacity
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
@@ -624,6 +645,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode=self.postcode)
     def test_invalid_solar_energy_total_cost(self):
+        # test invalid solar energy input
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
