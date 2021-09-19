@@ -507,6 +507,33 @@ class TestGetWeatherData(unittest.TestCase):
         res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
         self.assertEqual(res.json().get("date"), "2019-12-01")
 
+    def test_month_lesser_10_get_weather_data(self):
+        """
+        Test branch of when the month is greater or equal to 10, for coverage.
+        Not mocked, since request is called twice.
+        """
+
+        res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+        self.assertEqual(res.json().get("date"), "2019-09-01")
+
+    def test_day_lesser_10_get_weather_data(self):
+        """
+        Test branch of when the month is greater or equal to 10, for coverage.
+        Not mocked, since request is called twice.
+        """
+
+        res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+        self.assertEqual(res.json().get("date"), "2019-09-01")
+
+    def test_day_greater_10_get_weather_data(self):
+        """
+        Test branch of when the month is greater or equal to 10, for coverage.
+        Not mocked, since request is called twice.
+        """
+
+        res = self.calculator.get_weather_data(date(2019, 9, 10), "4000")
+        self.assertEqual(res.json().get("date"), "2019-09-10")
+
 
 if __name__ == "__main__":
     # create the test suit from the cases above.
