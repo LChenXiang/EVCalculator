@@ -513,7 +513,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
 
     def test_invalid_cost_calc_tc4(self):
         with self.assertRaises(ValueError):
-            self.calculator.cost_calculation(20, 30, -100, True, True, -5)
+            self.calculator.cost_calculation(20, 30, 100, True, True, -5)
 
     def test_invalid_time_calc_tc1(self):
         with self.assertRaises(ValueError):
@@ -611,11 +611,11 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         config = 6
         start_time = time(0)
         start_date = date(2021, 8, 21)
-        battery_capacity = 0
+        battery_capacity = -100
         initial_charge = 0
         final_charge = 80
         expected_cost = 0
-        power = -1
+        power = 0
         base_cost = 10
         end_time = datetime(2020, 8, 21, 5, 30)
         with self.assertRaises(ValueError):
