@@ -16,6 +16,8 @@ class Calculator():
                               [90, 30],
                               [350, 50]]
         # self.selection = None  this is for location ID selection
+        self.previous_postcode = None
+        self.api_data = None
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -66,35 +68,41 @@ class Calculator():
         :param postcode: Postcode/location of the weather data
         :return: Weather data, in requests data type
         """
-        locationURL = "http://118.138.246.158/api/v1/location?postcode="
-        requestLocationURL = locationURL + postcode
-        resLocation = requests.get(url=requestLocationURL)
-        if resLocation.status_code != 200:
-            raise ValueError("Invalid postcode")
-        if len(resLocation.json()) == 0:
-            raise ValueError("Invalid postcode")
-        # selection was made here
-        # if not self.selection:
-        #     for i in range(len(resLocation.json())):
-        #         print(resLocation.json()[i].get("name"), i)
-        #     self.selection = int(input("select_id: "))
-        # locationID = resLocation.json()[self.selection].get("id")
-        locationID = resLocation.json()[0].get("id")
-        if input_date.month < 10:
-            month = "0" + str(input_date.month)
+        if self.previous_postcode is None or self.previous_postcode != postcode:
+            locationURL = "http://118.138.246.158/api/v1/location?postcode="
+            requestLocationURL = locationURL + postcode
+            resLocation = requests.get(url=requestLocationURL)
+            if resLocation.status_code != 200:
+                raise ValueError("Invalid postcode")
+            if len(resLocation.json()) == 0:
+                raise ValueError("Invalid postcode")
+            # selection was made here
+            # if not self.selection:
+            #     for i in range(len(resLocation.json())):
+            #         print(resLocation.json()[i].get("name"), i)
+            #     self.selection = int(input("select_id: "))
+            # locationID = resLocation.json()[self.selection].get("id")
+
+            locationID = resLocation.json()[0].get("id")
+            if input_date.month < 10:
+                month = "0" + str(input_date.month)
+            else:
+                month = str(input_date.month)
+            if input_date.day < 10:
+                day = "0" + str(input_date.day)
+            else:
+                day = str(input_date.day)
+            dateRequest = "%s-%s-%s" % (input_date.year, month, day)
+            weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (
+                locationID, dateRequest)
+            resWeather = requests.get(url=weatherURL)
+            if resWeather.status_code != 200:
+                raise ValueError("Could not get weather data")
+            self.api_data = resWeather
+            self.previous_postcode = postcode
+            return resWeather
         else:
-            month = str(input_date.month)
-        if input_date.day < 10:
-            day = "0" + str(input_date.day)
-        else:
-            day = str(input_date.day)
-        dateRequest = "%s-%s-%s" % (input_date.year, month, day)
-        weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (
-            locationID, dateRequest)
-        resWeather = requests.get(url=weatherURL)
-        if resWeather.status_code != 200:
-            raise ValueError("Could not get weather data")
-        return resWeather
+            return self.api_data
 
     # to be acquired through API
     def get_sun_hour(self, input_date: date, postcode: str) -> float:
@@ -364,6 +372,7 @@ class Calculator():
         state = resLocation.json()[0].get("state")
         return state
 
+    # for the calculation of solar energy, should the solar energy generated time splited so that when it span across non-peak hour/holiday stuff the cost will be different 
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
                                start_state: int, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: float = 0) -> float:
@@ -450,7 +459,6 @@ if __name__ == "__main__":
                                           capacity=battery_capacity, postcode="7250")
     print(final_cost)
     solar_energy_generated = C.calculate_solar_energy_future(datetime.combine(start_date,start_time),end_time,"7250")
-    print(solar_energy_generated)
     final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
                                           start_state=initial_charge, end_time=end_time,
                                           base_price=base_cost, power=power,
