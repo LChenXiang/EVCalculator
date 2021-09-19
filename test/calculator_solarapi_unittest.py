@@ -44,6 +44,10 @@ class TestDaylightLength(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_sun_hour(postcode="00", input_date=date(year=2000, month=8, day=20))
 
+    def test_DaylightLength_error_invalid_date2(self):
+        with self.assertRaises(AttributeError):
+            self.calculator.get_sun_hour(postcode="4000", input_date="2020/1/1")
+
 
 class TestSunHours(unittest.TestCase):
 
@@ -83,6 +87,10 @@ class TestSunHours(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_sun_hour(postcode="00", input_date=date(year=2000, month=8, day=20))
 
+    def test_SunHours_error_invalid_date2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.get_sun_hour(postcode="00", input_date="2020/1/1")
+
 
 class TestGetSunriseSunSet(unittest.TestCase):
 
@@ -109,6 +117,23 @@ class TestGetSunriseSunSet(unittest.TestCase):
         self.assertEqual(expected_sunrise, res[0], msg=("Expected %s, got %s" % (expected_sunrise, res[0])))
         self.assertEqual(expected_sunset, res[1], msg=("Expected %s, got %s" % (expected_sunset, res[1])))
 
+    def test_SRSS_3(self):
+        input_date = "2020/1/1"
+        postcode = "4000"
+        with self.assertRaises(AttributeError):
+            res = self.calculator.get_sunrise_sunset(input_date, postcode)
+
+    def test_SRSS_4(self):
+        input_date = date(2020, 1, 1)
+        postcode = "0"
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_sunrise_sunset(input_date, postcode)
+
+    def test_SRSS_5(self):
+        input_date = date(2020, 1, 1)
+        postcode = "0000"
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_sunrise_sunset(input_date, postcode)
 
 class TestCloudCover(unittest.TestCase):
 
@@ -133,6 +158,24 @@ class TestCloudCover(unittest.TestCase):
         res = self.calculator.get_cloud_cover(input_date, postcode)
         self.assertEqual(res, excepted_list, msg=("Excepted %s, got %s" % (excepted_list, res)))
 
+    def test_cloud_cover_3(self):
+        input_date = "2020/1/1"
+        postcode = "3800"
+        with self.assertRaises(AttributeError):
+            res = self.calculator.get_cloud_cover(input_date, postcode)
+
+    def test_cloud_cover_4(self):
+        input_date = date(2020,1,1)
+        postcode = "00"
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_cloud_cover(input_date, postcode)
+
+    def test_cloud_cover_5(self):
+        input_date = date(2020,1,1)
+        postcode = "0000"
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_cloud_cover(input_date, postcode)
+
 class TestGetWeatherData(unittest.TestCase):
 
     def setUp(self) -> None:
@@ -142,16 +185,13 @@ class TestGetWeatherData(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2021, 8, 1), "000")
 
-
     def test_invalid_postcode_get_weather_data_tc2(self):
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2021, 8, 1), "0000")
 
-
     def test_invalid_date_get_weather_data_tc3(self):
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2000, 1, 1), "4000")
-
 
     def test_month_greater_10_get_weather_data_tc3(self):
         res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
