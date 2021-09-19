@@ -497,6 +497,22 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_configuration(9)
 
+    def test_invalid_cost_calc_tc1(self):
+        with self.assertRaises(ValueError):
+            self.calculator.cost_calculation(-1, 100, 100, True, True, 10)
+
+    def test_invalid_cost_calc_tc2(self):
+        with self.assertRaises(ValueError):
+            self.calculator.cost_calculation(20, 19, 100, True, True, 10)
+
+    def test_invalid_cost_calc_tc3(self):
+        with self.assertRaises(ValueError):
+            self.calculator.cost_calculation(20, 30, -100, True, True, 10)
+
+    def test_invalid_cost_calc_tc4(self):
+        with self.assertRaises(ValueError):
+            self.calculator.cost_calculation(20, 30, -100, True, True, -5)
+
 if __name__ == "__main__":
     # create the test suit from the cases above.
     suit = unittest.TestLoader().loadTestsFromTestCase(WhiteBoxCostCalculator)

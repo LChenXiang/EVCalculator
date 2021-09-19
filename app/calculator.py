@@ -18,6 +18,15 @@ class Calculator():
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
                          is_peak: bool, is_holiday: bool, base_price: float) -> float:
+        if initial_state < 0 or initial_state > 100:
+            raise ValueError
+        if final_state <= initial_state or final_state > 100:
+            raise ValueError
+        if capacity < 0:
+            raise ValueError
+        if base_price < 0:
+            raise ValueError
+
         if is_peak:
             peak_modifier = 1
         else:
