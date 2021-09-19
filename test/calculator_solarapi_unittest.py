@@ -498,7 +498,7 @@ class TestGetWeatherData(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2000, 1, 1), "4000")
 
-    def test_month_greater_10_get_weather_data(self, mocked_get):
+    def test_month_greater_10_get_weather_data(self):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
         Not mocked, since request is called twice.
