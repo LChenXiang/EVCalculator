@@ -348,6 +348,10 @@ class Calculator():
                     # means not within daylight
                     if start_time_point > sunset_delta:
                         return 0
+                    if start_time_point < sunrise_delta:
+                        start_time_point = sunrise_delta
+                    if end_time_point > sunset_delta:
+                        end_time_point = sunset_delta
                 dl = self.get_day_light_length(reference_date, postcode)
                 si = self.get_sun_hour(reference_date, postcode)
                 cloud_cover_list = self.get_cloud_cover(
