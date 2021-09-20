@@ -17,6 +17,7 @@ class Calculator():
                               [350, 50]]
         # self.selection = None  this is for location ID selection
         self.previous_postcode = None
+        self.previous_date = None
         self.api_data = None
         self.valid_states = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
 
@@ -126,7 +127,7 @@ class Calculator():
         :param postcode: Postcode/location of the weather data
         :return: Weather data, in requests data type
         """
-        if self.previous_postcode is None or self.previous_postcode != postcode:
+        if self.previous_postcode is None or self.previous_postcode != postcode or input_date != self.previous_date:
             locationURL = "http://118.138.246.158/api/v1/location?postcode="
             requestLocationURL = locationURL + postcode
             resLocation = requests.get(url=requestLocationURL)
@@ -157,6 +158,7 @@ class Calculator():
                 raise ValueError("Could not get weather data")
             self.api_data = resWeather
             self.previous_postcode = postcode
+            self.previous_date = input_date
             return resWeather
         else:
             return self.api_data
@@ -375,8 +377,7 @@ class Calculator():
                         du = (end_time_minute)/60
                     else:
                         du = 1
-                    hourly_generated_solar_energy = si * \
-                        du / dl * (1-cc/100) * 50 * 0.2
+                    hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
                     total_power_daily = total_power_daily + hourly_generated_solar_energy
                     current_hour = current_hour + 1
                     if current_hour > end_time_date.hour:
@@ -515,31 +516,7 @@ class Calculator():
 
 if __name__ == "__main__":
     C = Calculator()
-    config = 1
-    start_time = time(17, 30)
-    start_date = date(2022, 2, 22)
-    battery_capacity = 50
-    initial_charge = 20
-    final_charge = 60
-    expected_cost = 0.53
-    power = C.get_configuration(config)[0]
-    base_cost = C.get_configuration(config)[1]
-
-    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-                                     capacity=battery_capacity, power=power)
-    end_time = C.get_end_time(start_date, start_time, charge_time)
-    """
-    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                          start_state=initial_charge, end_time=end_time,
-                                          base_price=base_cost, power=power,
-                                          capacity=battery_capacity, postcode="7250")
-    print(final_cost)"""
-    solar_energy_generated = C.calculate_solar_energy_future(datetime.combine(start_date,start_time),end_time,"7250")
+    start_time = datetime(2022, 2, 22, 17, 30)
+    end_time = datetime(2022, 2, 22, 18, 15)
+    solar_energy_generated = C.calculate_solar_energy_future(start_time,end_time,"7250")
     print(solar_energy_generated)
-    """
-    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                          start_state=initial_charge, end_time=end_time,
-                                          base_price=base_cost, power=power,
-                                          capacity=battery_capacity, postcode="7250", solar_energy=solar_energy_generated)
-    print(final_cost)
-    """
