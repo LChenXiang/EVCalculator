@@ -103,7 +103,7 @@ class TestFutureSolar(unittest.TestCase):
                                                                 start_state=initial_charge, end_time=end_time,
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode="7250")
-        expected_output = 0.22
+        expected_output = 0.48
         self.assertAlmostEqual(final_cost, expected_output, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_output, final_cost)))
 
