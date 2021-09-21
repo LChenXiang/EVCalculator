@@ -1,6 +1,8 @@
 from app.calculator import *
 import unittest
 from datetime import time, date
+from dateutil.relativedelta import relativedelta
+from unittest.mock import Mock, patch, PropertyMock
 import os
 
 
@@ -36,36 +38,39 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
 
-    def test_whitebox_totalcost_tc2(self):
-        """
-        Path coverage test case 2 for total_cost_calculation.
-        """
-        config = 1
-        start_time = time(0)
-        start_date = date(2021, 8, 21)
-        battery_capacity = 50
-        initial_charge = 20
-        final_charge = 40
-        expected_cost = 0.25
-        power = self.calculator.get_configuration(config)[0]
-        base_cost = self.calculator.get_configuration(config)[1]
-        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
-                                                       capacity=battery_capacity, power=power)
-        end_time = self.calculator.get_end_time(start_date, start_time, charge_time)
-        final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                                            start_state=initial_charge, end_time=end_time,
-                                                            base_price=base_cost, power=power,
-                                                            capacity=battery_capacity, postcode=self.postcode)
-        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
-                                                                           % (expected_cost, final_cost)))
+    # def test_whitebox_totalcost_tc2(self):
+    #     """
+    #     Path coverage test case 2 for total_cost_calculation.
+    #     """
+    #     config = 1
+    #     start_time = time(0)
+    #     start_date = date(2021, 8, 21)
+    #     battery_capacity = 50
+    #     initial_charge = 20
+    #     final_charge = 40
+    #     expected_cost = 0.25
+    #     power = self.calculator.get_configuration(config)[0]
+    #     base_cost = self.calculator.get_configuration(config)[1]
+    #     charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+    #                                                    capacity=battery_capacity, power=power)
+    #     end_time = self.calculator.get_end_time(start_date, start_time, charge_time)
+    #     final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+    #                                                         start_state=initial_charge, end_time=end_time,
+    #                                                         base_price=base_cost, power=power,
+    #                                                         capacity=battery_capacity, postcode=self.postcode)
+    #     self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+    #                                                                        % (expected_cost, final_cost)))
 
-    def test_whitebox_totalcost_tc3(self):
+    @patch('app.calculator.Calculator.is_holiday')
+    def test_whitebox_totalcost_tc3(self, mocked_holiday):
         """
         Path coverage test case 3 for total_cost_calculation.
         """
+        mocked_holiday.return_value = False
+
         config = 3
         start_time = time(8)
-        start_date = date(2021, 8, 21)
+        start_date = date.today()
         battery_capacity = 50
         initial_charge = 20
         final_charge = 40
@@ -82,13 +87,16 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
                                                                            % (expected_cost, final_cost)))
 
-    def test_whitebox_totalcost_tc4(self):
+    @patch('app.calculator.Calculator.is_holiday')
+    def test_whitebox_totalcost_tc2(self, mocked_holiday):
         """
-        Path coverage test case 4 for total_cost_calculation.
+        Path coverage test case 2 for total_cost_calculation.
         """
+        mocked_holiday.return_value = True
+
         config = 4
         start_time = time(0)
-        start_date = date(2021, 8, 24)
+        start_date = date.today() + relativedelta(years=1)
         battery_capacity = 50
         initial_charge = 20
         final_charge = 40
