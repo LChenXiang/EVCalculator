@@ -7,7 +7,7 @@ class TestFutureSolar(unittest.TestCase):
     def setUp(self) -> None:
         self.calculator = Calculator()
 
-    def test_1(self):
+    def energy_test_1(self):
         """
             condition: This path is when the start time and end time is not within daylight length, thus it will return directly as there will be no solar energy generated
         """
@@ -20,7 +20,7 @@ class TestFutureSolar(unittest.TestCase):
         self.assertAlmostEqual(solar_energy_generated, expected_result, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
 
-    def test_2(self):
+    def energy_test_2(self):
         """
             condition: This path is when the start time hour is the same as sunrise hour but the start time minute is smaller than the sunrise minute,
             it will update the value of start time. Then, path 8-9-10 will not be possible as path 8-9-10 indicates the start time to end time is a whole hour, 
@@ -35,7 +35,7 @@ class TestFutureSolar(unittest.TestCase):
         self.assertAlmostEqual(solar_energy_generated, expected_result, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
 
-    def test_3(self):
+    def energy_test_3(self):
         """
             condition: This path is when the end time hour is the same as sunset hour but the end time minute is larger than the sunset minute, 
             it will update the value of end time. Then, path 8-9-10 will not be possible as path 8-9-10 indicates the start time to end time is a whole hour, 
@@ -50,7 +50,7 @@ class TestFutureSolar(unittest.TestCase):
         self.assertAlmostEqual(solar_energy_generated, expected_result, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
 
-    def test_4(self):
+    def energy_test_4(self):
         """
             condition: This path is when the start time and end time has a whole hour gap which is 60 minutes. The value of du will be updated to 1.
         """
@@ -62,6 +62,29 @@ class TestFutureSolar(unittest.TestCase):
         expected_result = 3.25
         self.assertAlmostEqual(solar_energy_generated, expected_result, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
+
+    def cost_test_1(self):
+        """
+            condition: cost calculation
+        """
+        config = 3
+        start_time = time(17,30)
+        start_date = date(2022, 9, 21)
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        end_time = datetime(2022,9,21,18,15)   
+        final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode="7250",solar_energy=True)
+        expected_output = 0.22
+        self.assertAlmostEqual(final_cost, expected_output, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                                         % (expected_output, final_cost)))
 
     # you may create test suite if needed
     # Test case needed for form

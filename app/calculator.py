@@ -231,8 +231,7 @@ class Calculator():
             6) use it in the formula to get the solar energy generated
             7) return hourly_generated_solar_energy
         """
-        sunrise, sunset = self.get_sunrise_sunset(
-                    start_time_date, postcode)
+        sunrise, sunset = self.get_sunrise_sunset(start_time_date.date(), postcode)
         if start_time_date.time() > sunset or end_time_date.time() < sunrise:
             # if the start and end is not within daylight
             return 0
@@ -248,7 +247,6 @@ class Calculator():
         si = self.get_sun_hour(start_time_date, postcode)
         cloud_cover_list = self.get_cloud_cover(start_time_date, postcode)
         cc = cloud_cover_list[start_time_point.hour]
-        
         time_dif = (end_time_point - start_time_point)
         du = (time_dif.seconds // 60 % 60) / 60
         # if hour == 1: (means whole hour)
@@ -348,8 +346,7 @@ class Calculator():
                     is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
                     solar_power_this_year = 0
                     if solar_energy:
-                        solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
-                                                                                   postcode)
+                        solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end, postcode)
                     remaining_charge = max(0, (power_from_this_charge - solar_power_this_year))
                     time_remaining_charge = remaining_charge / power
                     fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
@@ -376,21 +373,17 @@ if __name__ == "__main__":
     C = Calculator()
     config = 3
     start_time = time(17,30)
-    start_date = date(2022, 9, 21)
+    start_date = date(2022, 2, 22)
     battery_capacity = 50
     initial_charge = 20
     final_charge = 40
     power = C.get_configuration(config)[0]
     base_cost = C.get_configuration(config)[1]
-    #charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-    #                                               capacity=battery_capacity, power=power)
-    end_time = datetime(2022,9,21,18,15)
-    start_time = datetime(2021, 2, 22, 9, 00)
-    end_time = datetime(2021, 2, 22, 10, 00)
-    solar_energy = C.calculate_solar_energy_future(start_time,end_time,"7250")
-
-    #final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-    #                                                        start_state=initial_charge, end_time=end_time,
-    #                                                        base_price=base_cost, power=power,
-    #                                                        capacity=battery_capacity, postcode="7250",solar_energy=True)
-    #print(final_cost)
+    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                   capacity=battery_capacity, power=power)
+    end_time = datetime(2022,2,22,18,15)
+    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
+    print(final_cost)
