@@ -297,6 +297,8 @@ class Calculator():
             raise ValueError
         if base_price < 0:
             raise ValueError
+        if type(solar_energy) is not bool:
+            raise ValueError
 
         state = self.get_state(postcode)
         cost = 0
