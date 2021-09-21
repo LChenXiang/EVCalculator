@@ -89,4 +89,7 @@ class TestFutureSolar(unittest.TestCase):
     # you may create test suite if needed
     # Test case needed for form
 if __name__ == "__main__":
-    unittest.main()
+    # create the test suit from the cases above.
+    suit = unittest.TestLoader().loadTestsFromTestCase(TestFutureSolar)
+    # this will run the test suit
+    unittest.TextTestRunner(verbosity=2).run(suit)
