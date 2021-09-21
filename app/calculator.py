@@ -170,7 +170,6 @@ class Calculator():
         :return: Sun hour data for the given date and postcode
         """
         resWeather = self.get_weather_data(input_date, postcode)
-        print(resWeather.json().get("sunHours"))
         return resWeather.json().get("sunHours")
 
     def get_sunrise_sunset(self, input_date: date, postcode: str):
@@ -294,6 +293,33 @@ class Calculator():
             total_power = total_power_all / 3
         """
         # calculate reference date
+        sunrise, sunset = self.get_sunrise_sunset(
+                    start_time_date, postcode)
+        start_time_point = start_time_date
+        end_time_point = end_time_date
+        if start_time_date.hour == sunrise.hour and start_time_date.minute < sunrise.minute:
+            start_time_point = datetime.combine(start_time_date.date(),sunrise)
+        if end_time_date.hour == sunset.hour and end_time_date.minute > sunset.minute:
+            end_time_point = datetime.combine(start_time_date.date(),sunset)
+
+        if start_time_date.time() > sunset or end_time_date.time() < sunrise:
+            # if the start and end is not within daylight
+            return 0
+
+        dl = self.get_day_light_length(start_time_date, postcode)
+        si = self.get_sun_hour(start_time_date, postcode)
+        cloud_cover_list = self.get_cloud_cover(start_time_date, postcode)
+        cc = cloud_cover_list[start_time_point.hour]
+        
+        time_dif = (end_time_point - start_time_point)
+        if time_dif.seconds // 3600 == 1:
+            du = 1
+        else:
+            du = (time_dif.seconds // 60 % 60) / 60
+        
+        hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
+        return hourly_generated_solar_energy
+        """
         day_gap = end_time_date.day - start_time_date.day
         total_solar_across_day = 0
         for day in range(day_gap, -1, -1):
@@ -391,7 +417,7 @@ class Calculator():
             estimated_solar_mean = estimated_solar_mean/3
             total_solar_across_day = total_solar_across_day + estimated_solar_mean
         return total_solar_across_day
-
+"""
     def calculate_solar_energy(self, start_time_date: datetime, end_time_date: datetime,
                                postcode: str):
         minus_two_day = timedelta(days=2)
@@ -475,11 +501,12 @@ class Calculator():
                 cost_all_year_this_period = 0
                 current_year = datetime.now().year
                 gap = current_date_time.year - current_year
-                for i in range(3, 0, -1):
+                for i in range(3):
                     this_year_start = current_date_time - dateutil.relativedelta.relativedelta(years=i + gap)
                     this_year_end = new_datetime - dateutil.relativedelta.relativedelta(years=i + gap)
                     is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
                     solar_power_this_year = 0
+                    print(this_year_end,this_year_start)
                     if solar_energy:
                         solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
                                                                                    postcode)
@@ -507,7 +534,24 @@ class Calculator():
 
 if __name__ == "__main__":
     C = Calculator()
-    start_time = datetime(2022, 2, 22, 17, 30)
-    end_time = datetime(2022, 2, 22, 18, 15)
-    solar_energy_generated = C.calculate_solar_energy_future(start_time,end_time,"7250")
-    print(solar_energy_generated)
+    config = 3
+    start_time = time(17,30)
+    start_date = date(2022, 2, 22)
+    battery_capacity = 50
+    initial_charge = 20
+    final_charge = 40
+    expected_cost = 0.55
+    power = C.get_configuration(config)[0]
+    base_cost = C.get_configuration(config)[1]
+    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                   capacity=battery_capacity, power=power)
+    end_time = datetime(2022,2,22,18,15)
+    #start_time = datetime(2022, 2, 22, 17, 30)
+    #end_time = datetime(2022, 2, 22, 18, 15)
+    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
+    print(final_cost)
+    #solar_energy_generated = C.calculate_solar_energy_future(start_time,end_time,"7250")
+    #print(solar_energy_generated)
