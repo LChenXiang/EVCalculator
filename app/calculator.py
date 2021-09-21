@@ -191,12 +191,6 @@ class Calculator():
         daylight_length = (sunset_delta - sunrise_delta).total_seconds() / 3600
         return daylight_length
 
-    # to be acquired through API
-    # def get_solar_insolation(self, solar_insolation):
-    #     pass
-
-    # to be acquired through API
-
     def get_cloud_cover(self, input_date: date, postcode: str) -> list:
         """
         Gets the list of cloud cover values for the given date and postcode.
@@ -229,48 +223,26 @@ class Calculator():
             cloud cover,        cc
 
             CONCEPT
-            1) find reference data, means if given 20/05/2023, get reference data 20/05/2021
-            2) get sunrise and sunset time,dl check if charging hour was at daylight, get solar insolation, si
-            3) calculate the solar energy generated during daylight (a for loop based on day duration)
-                - calculate the solar energy generated based on hour (another for loop)
-                - get hourly cloud cover values, cc (o to 100)
-                - get the duration, du (minute/60)
-                - formula for this is si*1/dl * (1-cc/100) * 50 * 0.2 (in kWh)
-                - sum up the total solar energy generated for the day
-            4) calculate the solar energy generated for the same day in the preceding two years, repeat step 2 onward
-            5) estimate the solar energy generated as the mean of the three solar energy generated
-            6) sum up the total energy value for all days
-
-            Past date: for loop each day of charging
-            Future date: nested loop:
-            total_power_all = 0
-            FOR 3 YEARS REFERENCE DATE:
-                total_power_year = 0
-                for each chargingday
-                    total_power_day = 0
-                    retrieve solar length
-                    generate solar charging hour (GET SUNRISE, SUNSET, AKA DAYLIGHT LENGTH)
-                  for each solar charging hour
-                      retrieve cloud cover
-                      total_power_hour calc
-                      total_power_day += totalpower_hour
-                  total_power_year += total_power_day
-              total_power_all += total_power_year
-            total_power = total_power_all / 3
+            1) start_time_date and end_time_date will be either whole hour or partial hour
+            2) need to identify if both time is within daylight, if not, return 0 directly
+            3) if start_time_date is same as sunrise hour, but minute is smaller than sunrise minute, update start_time_point to become sunrise
+            4) if end_time_date is same as sunset hour, but minute is larger than sunset minute, update end_time_point to become sunset
+            5) get si,du,dl,cc
+            6) use it in the formula to get the solar energy generated
+            7) return hourly_generated_solar_energy
         """
-        # calculate reference date
         sunrise, sunset = self.get_sunrise_sunset(
                     start_time_date, postcode)
+        if start_time_date.time() > sunset or end_time_date.time() < sunrise:
+            # if the start and end is not within daylight
+            return 0
+
         start_time_point = start_time_date
         end_time_point = end_time_date
         if start_time_date.hour == sunrise.hour and start_time_date.minute < sunrise.minute:
             start_time_point = datetime.combine(start_time_date.date(),sunrise)
-        if end_time_date.hour == sunset.hour and end_time_date.minute > sunset.minute:
+        elif end_time_date.hour == sunset.hour and end_time_date.minute > sunset.minute:
             end_time_point = datetime.combine(start_time_date.date(),sunset)
-
-        if start_time_date.time() > sunset or end_time_date.time() < sunrise:
-            # if the start and end is not within daylight
-            return 0
 
         dl = self.get_day_light_length(start_time_date, postcode)
         si = self.get_sun_hour(start_time_date, postcode)
@@ -278,10 +250,10 @@ class Calculator():
         cc = cloud_cover_list[start_time_point.hour]
         
         time_dif = (end_time_point - start_time_point)
+        du = (time_dif.seconds // 60 % 60) / 60
+        # if hour == 1: (means whole hour)
         if time_dif.seconds // 3600 == 1:
             du = 1
-        else:
-            du = (time_dif.seconds // 60 % 60) / 60
         
         hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
         return hourly_generated_solar_energy
@@ -369,11 +341,14 @@ class Calculator():
                 cost_all_year_this_period = 0
                 current_year = datetime.now().year
                 gap = current_date_time.year - current_year
+                if current_year == current_date_time.year:
+                    gap = 1
                 for i in range(3):
                     this_year_start = current_date_time - dateutil.relativedelta.relativedelta(years=i + gap)
                     this_year_end = new_datetime - dateutil.relativedelta.relativedelta(years=i + gap)
                     is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
                     solar_power_this_year = 0
+                    print(this_year_start,this_year_end)
                     if solar_energy:
                         solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
                                                                                    postcode)
@@ -403,22 +378,17 @@ if __name__ == "__main__":
     C = Calculator()
     config = 3
     start_time = time(17,30)
-    start_date = date(2022, 2, 22)
+    start_date = date(2021, 9, 21)
     battery_capacity = 50
     initial_charge = 20
     final_charge = 40
-    expected_cost = 0.55
     power = C.get_configuration(config)[0]
     base_cost = C.get_configuration(config)[1]
     charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
                                                    capacity=battery_capacity, power=power)
-    end_time = datetime(2022,2,22,18,15)
-    #start_time = datetime(2022, 2, 22, 17, 30)
-    #end_time = datetime(2022, 2, 22, 18, 15)
+    end_time = datetime(2021,9,21,18,15)
     final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
                                                             start_state=initial_charge, end_time=end_time,
                                                             base_price=base_cost, power=power,
                                                             capacity=battery_capacity, postcode="7250",solar_energy=True)
     print(final_cost)
-    #solar_energy_generated = C.calculate_solar_energy_future(start_time,end_time,"7250")
-    #print(solar_energy_generated)
