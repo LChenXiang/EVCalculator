@@ -227,6 +227,8 @@ class WhiteBoxCostCalculator(unittest.TestCase):
         self.assertFalse(actual_out)
 
     def test_whitebox_get_charging_time_str_tc1(self):
+        # Test get_charging_time_str, path coverage cfg test case, check branch of going through
+        # else of ALL outer if statement
         input_time = 0
         expected_str = ""
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -234,6 +236,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc2(self):
+        # Test get_charging_time_str, path coverage cfg test case, check hour if statement branch
         input_time = 1
         expected_str = "1 hour"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -241,6 +244,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc3(self):
+        # Test get_charging_time_str, path coverage cfg test case, check hour if statement branch
         input_time = 2
         expected_str = "2 hours"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -248,6 +252,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc4(self):
+        # Test get_charging_time_str, path coverage cfg test case, check minute if statement branch
         input_time = (1 / 60)
         expected_str = "1 minute"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -255,6 +260,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc5(self):
+        # Test get_charging_time_str, path coverage cfg test case, check minute if statement branch
         input_time = (2 / 60)
         expected_str = "2 minutes"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -262,6 +268,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc6(self):
+        # Test get_charging_time_str, path coverage cfg test case, check seconds if statement branch
         input_time = (1 / 60) / 60
         expected_str = "1 second"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -269,6 +276,7 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_get_charging_time_str_tc7(self):
+        # Test get_charging_time_str, path coverage cfg test case, check seconds if statement branch
         input_time = (2 / 60 / 60)
         expected_str = "2 seconds"
         actual_str = self.calculator.get_charging_time_str(input_time)
@@ -276,18 +284,21 @@ class WhiteBoxCostCalculator(unittest.TestCase):
                                                         (expected_str, actual_str)))
 
     def test_whitebox_is_holiday_tc1(self):
+        # MC/DC Test case for is_holiday
         in_date = date(2021, 9, 15)
         state = "ACT"
         actual_out = self.calculator.is_holiday(in_date, state)
         self.assertTrue(actual_out)
 
     def test_whitebox_is_holiday_tc2(self):
+        # MC/DC Test case for is_holiday
         in_date = date(2021, 1, 1)
         state = "ACT"
         actual_out = self.calculator.is_holiday(in_date, state)
         self.assertTrue(actual_out)
 
     def test_whitebox_is_holiday_tc3(self):
+        # MC/DC Test case for is_holiday
         in_date = date(2021, 8, 29)
         state = "ACT"
         actual_out = self.calculator.is_holiday(in_date, state)

@@ -20,6 +20,8 @@ class Calculator():
         self.previous_date = None
         self.api_data = None
         self.valid_states = ["ACT", "NSW", "NT", "QLD", "SA", "TAS", "VIC", "WA"]
+        self.location_data = {}
+        self.weather_data = {}
 
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
@@ -127,42 +129,37 @@ class Calculator():
         :param postcode: Postcode/location of the weather data
         :return: Weather data, in requests data type
         """
-        if self.previous_postcode is None or self.previous_postcode != postcode or input_date != self.previous_date:
-            locationURL = "http://118.138.246.158/api/v1/location?postcode="
+        locationURL = "http://118.138.246.158/api/v1/location?postcode="
+        if self.location_data.get(postcode) is None:
             requestLocationURL = locationURL + postcode
             resLocation = requests.get(url=requestLocationURL)
             if resLocation.status_code != 200:
                 raise ValueError("Invalid postcode")
             if len(resLocation.json()) == 0:
                 raise ValueError("Invalid postcode")
-            # selection was made here
-            # if not self.selection:
-            #     for i in range(len(resLocation.json())):
-            #         print(resLocation.json()[i].get("name"), i)
-            #     self.selection = int(input("select_id: "))
-            # locationID = resLocation.json()[self.selection].get("id")
-            locationID = resLocation.json()[0].get("id")
-            if input_date.month < 10:
-                month = "0" + str(input_date.month)
-            else:
-                month = str(input_date.month)
-            if input_date.day < 10:
-                day = "0" + str(input_date.day)
-            else:
-                day = str(input_date.day)
-            dateRequest = "%s-%s-%s" % (input_date.year, month, day)
-            
-            weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (
-                locationID, dateRequest)
+            self.location_data[postcode] = resLocation
+        else:
+            resLocation = self.location_data[postcode]
+
+        locationID = resLocation.json()[0].get("id")
+        if input_date.month < 10:
+            month = "0" + str(input_date.month)
+        else:
+            month = str(input_date.month)
+        if input_date.day < 10:
+            day = "0" + str(input_date.day)
+        else:
+            day = str(input_date.day)
+        dateRequest = "location=%s&date=%s-%s-%s" % (locationID, input_date.year, month, day)
+        if self.weather_data.get(dateRequest) is None:
+            weatherURL = "http://118.138.246.158/api/v1/weather?%s" % (dateRequest)
             resWeather = requests.get(url=weatherURL)
             if resWeather.status_code != 200:
                 raise ValueError("Could not get weather data")
-            self.api_data = resWeather
-            self.previous_postcode = postcode
-            self.previous_date = input_date
-            return resWeather
+            self.weather_data[dateRequest] = resWeather
         else:
-            return self.api_data
+            resWeather = self.weather_data[dateRequest]
+        return resWeather
 
     # to be acquired through API
     def get_sun_hour(self, input_date: date, postcode: str) -> float:
@@ -370,7 +367,7 @@ class Calculator():
                 end_time_hour = (end_time_point.seconds // 3600)
                 end_time_minute = (end_time_point.seconds // 60 % 60)
 
-                
+
                 total_power_daily = 0
                 current_hour = start_time_hour
                 while not end:
@@ -447,7 +444,7 @@ class Calculator():
     # for the calculation of solar energy, should the solar energy generated time splited so that when it span across non-peak hour/holiday stuff the cost will be different
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
                                start_state: float, base_price: float, power: float, capacity: float,
-                               postcode: str, solar_energy: float = 0) -> float:
+                               postcode: str, solar_energy: bool = False) -> float:
         if start_state < 0 or start_state > 100:
             raise ValueError
         if capacity < 0:
@@ -456,17 +453,12 @@ class Calculator():
             raise ValueError
         if base_price < 0:
             raise ValueError
-        if solar_energy < 0:
+        if type(solar_energy) is not bool:
             raise ValueError
 
         state = self.get_state(postcode)
-        total_holiday_peak = 0
-        total_holiday_nonPeak = 0
-        total_nonHoliday_peak = 0
-        total_nonHoliday_nonPeak = 0
-
+        cost = 0
         current_date_time = datetime.combine(start_date, start_time)
-        remaining_solar_energy = solar_energy
 
         reachedEnd = False
         while (not reachedEnd):
@@ -479,48 +471,39 @@ class Calculator():
             difference_time_minutes = max(
                 0, ((new_datetime - current_date_time).total_seconds() / 60))
             power_from_this_charge = (difference_time_minutes) / 60 * power
-            power_after_deduct = max(
-                0, power_from_this_charge - remaining_solar_energy)
-            remaining_solar_energy = max(
-                0, remaining_solar_energy - power_from_this_charge)
-            time_remaining_charge = power_after_deduct / power * 60
-
-            if holiday_surcharge:
-                if peak:
-                    total_holiday_peak += time_remaining_charge
-                else:
-                    total_holiday_nonPeak += time_remaining_charge
+            if current_date_time > datetime.today() - timedelta(days=2):
+                cost_all_year_this_period = 0
+                current_year = datetime.now().year
+                gap = current_date_time.year - current_year
+                for i in range(3, 0, -1):
+                    this_year_start = current_date_time - dateutil.relativedelta.relativedelta(years=i + gap)
+                    this_year_end = new_datetime - dateutil.relativedelta.relativedelta(years=i + gap)
+                    is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
+                    solar_power_this_year = 0
+                    if solar_energy:
+                        solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
+                                                                                   postcode)
+                    remaining_charge = max(0, (power_from_this_charge - solar_power_this_year))
+                    time_remaining_charge = remaining_charge / power
+                    fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
+                    cost_all_year_this_period += self.cost_calculation(start_state, fsoc, capacity, peak,
+                                                                       is_holiday_this_year, base_price)
+                cost += cost_all_year_this_period / 3
             else:
-                if peak:
-                    total_nonHoliday_peak += time_remaining_charge
-                else:
-                    total_nonHoliday_nonPeak += time_remaining_charge
+                solar_power_this_period = 0
+                if solar_energy:
+                    solar_power_this_period = \
+                        self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, state)
+                remaining_charge = max(0, power_from_this_charge - solar_power_this_period)
+                time_remaining_charge = remaining_charge / power
+                fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
+                cost += self.cost_calculation(start_state, fsoc, capacity, peak, holiday_surcharge, base_price)
 
             if new_datetime == end_time:
                 reachedEnd = True
             current_date_time = new_datetime
 
-        # Calculate Final state of charge for each category
-        holiday_peak_fsoc = (
-            ((total_holiday_peak / 60) * power / capacity) + (start_state / 100)) * 100
-        holiday_nonpeak_fsoc = (
-            ((total_holiday_nonPeak / 60) * power / capacity) + (start_state / 100)) * 100
-        nonholiday_peak_fsoc = (
-            ((total_nonHoliday_peak / 60) * power / capacity) + (start_state / 100)) * 100
-        nonholiday_nonpeak_fsoc = (((total_nonHoliday_nonPeak / 60) * power / capacity)
-                                   + (start_state / 100)) * 100
-
-        cost_holiday_peak = self.cost_calculation(start_state, holiday_peak_fsoc, capacity,
-                                                  True, True, base_price)
-        cost_holiday_nonpeak = self.cost_calculation(start_state, holiday_nonpeak_fsoc, capacity,
-                                                     False, True, base_price)
-        cost_nonholiday_peak = self.cost_calculation(start_state, nonholiday_peak_fsoc, capacity,
-                                                     True, False, base_price)
-        cost_nonholiday_nonpeak = self.cost_calculation(start_state, nonholiday_nonpeak_fsoc,
-                                                        capacity, False, False, base_price)
-
-        return round((cost_holiday_peak + cost_holiday_nonpeak + cost_nonholiday_peak + cost_nonholiday_nonpeak), 2)
-
+        return round(cost, 2)
 
 if __name__ == "__main__":
     C = Calculator()
