@@ -369,21 +369,22 @@ class Calculator():
 
         return round(cost, 2)
 
-#if __name__ == "__main__":
-#    C = Calculator()
-#    config = 3
-#    start_time = time(17,30)
-#    start_date = date(2022, 2, 22)
-#    battery_capacity = 50
-#    initial_charge = 20
-#    final_charge = 40
-#    power = C.get_configuration(config)[0]
-#    base_cost = C.get_configuration(config)[1]
-#    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-#                                                   capacity=battery_capacity, power=power)
-#    end_time = datetime(2022,2,22,18,15)
-#    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-#                                                            start_state=initial_charge, end_time=end_time,
-#                                                            base_price=base_cost, power=power,
-#                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
-#    print(final_cost)
+if __name__ == "__main__":
+    C = Calculator()
+    config = 3
+    start_time = time(17,30)
+    start_date = date(2021, 12, 12)
+    battery_capacity = 50
+    initial_charge = 20
+    final_charge = 40
+    power = C.get_configuration(config)[0]
+    base_cost = C.get_configuration(config)[1]
+    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                   capacity=battery_capacity, power=power)
+    end_time = datetime(2021,12,12,18,15)  
+    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
+ 
+    print(final_cost)

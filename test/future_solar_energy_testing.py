@@ -106,6 +106,29 @@ class TestFutureSolar(unittest.TestCase):
         expected_output = 0.48
         self.assertAlmostEqual(final_cost, expected_output, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_output, final_cost)))
+    
+    def test_7(self):
+        """
+            cost_calculation for same year which is 12-12-2021 to get reference date for 2020 instead of 2021, value will be difference when the date of testing exceed 12-12-2021
+            condition: cost calculation
+        """
+        config = 3
+        start_time = time(17,30)
+        start_date = date(2021, 12, 12)
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 40
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        end_time = datetime(2021,12,12,18,15)  
+        final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                                start_state=initial_charge, end_time=end_time,
+                                                                base_price=base_cost, power=power,
+                                                                capacity=battery_capacity, postcode="7250",solar_energy=True)
+        expected_output = 0.16
+        print(final_cost)
+        self.assertAlmostEqual(final_cost, expected_output, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                                         % (expected_output, final_cost)))
 
     # you may create test suite if needed
     # Test case needed for form
