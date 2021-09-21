@@ -31,7 +31,7 @@ class TestFutureSolar(unittest.TestCase):
         postcode = "7250"
         solar_energy_generated = self.calculator.calculate_solar_energy_future(
             start_time, end_time, postcode)
-        expected_result = 2.9
+        expected_result = 0.99
         self.assertAlmostEqual(solar_energy_generated, expected_result, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
 
@@ -46,7 +46,7 @@ class TestFutureSolar(unittest.TestCase):
         postcode = "7250"
         solar_energy_generated = self.calculator.calculate_solar_energy_future(
             start_time, end_time, postcode)
-        expected_result = 2.9
+        expected_result = 0.34
         self.assertAlmostEqual(solar_energy_generated, expected_result, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_result, solar_energy_generated)))
 
