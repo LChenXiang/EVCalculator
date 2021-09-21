@@ -151,6 +151,7 @@ class Calculator():
             else:
                 day = str(input_date.day)
             dateRequest = "%s-%s-%s" % (input_date.year, month, day)
+            
             weatherURL = "http://118.138.246.158/api/v1/weather?location=%s&date=%s" % (
                 locationID, dateRequest)
             resWeather = requests.get(url=weatherURL)
@@ -172,6 +173,7 @@ class Calculator():
         :return: Sun hour data for the given date and postcode
         """
         resWeather = self.get_weather_data(input_date, postcode)
+        print(resWeather.json().get("sunHours"))
         return resWeather.json().get("sunHours")
 
     def get_sunrise_sunset(self, input_date: date, postcode: str):
@@ -308,7 +310,7 @@ class Calculator():
 
                 start_time_point = None
                 end_time_point = None
-
+                end = False
                 sunrise, sunset = self.get_sunrise_sunset(
                     reference_date, postcode)
                 sunrise_delta = timedelta(
@@ -324,6 +326,8 @@ class Calculator():
                             hours=start_time_date.hour, minutes=start_time_date.minute)
                         if sunrise_delta >= target <= sunset_delta:
                             start_time_point = target
+                        elif target > sunset_delta:
+                            end = True
                         else:
                             start_time_point = sunrise_delta
                         end_time_point = sunset_delta
@@ -334,6 +338,8 @@ class Calculator():
                             hours=end_time_date.hour, minutes=end_time_date.minute)
                         if sunrise_delta >= target <= sunset_delta:
                             end_time_point = target
+                        elif target < sunrise_delta:
+                            end = True
                         else:
                             end_time_point = sunset_delta
                         start_time_point = sunrise_delta
@@ -364,7 +370,7 @@ class Calculator():
                 end_time_hour = (end_time_point.seconds // 3600)
                 end_time_minute = (end_time_point.seconds // 60 % 60)
 
-                end = False
+                
                 total_power_daily = 0
                 current_hour = start_time_hour
                 while not end:
@@ -378,8 +384,10 @@ class Calculator():
                     else:
                         du = 1
                     hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
+                    print(si,du,dl,cc)
                     total_power_daily = total_power_daily + hourly_generated_solar_energy
                     current_hour = current_hour + 1
+                    print(hourly_generated_solar_energy)
                     if current_hour > end_time_date.hour:
                         end = True
                 estimated_solar_mean = estimated_solar_mean + total_power_daily
