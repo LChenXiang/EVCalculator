@@ -69,40 +69,6 @@ class Calculator():
             raise ValueError
         return self.configuration[config - 1]
 
-    # def get_school_holiday_file(self, filename: str):
-    #     """
-    #     Opens a file and parses the range of date into dates and return the list of dates.
-    #     Used to get school holidays
-    #     :param filename: File to get the dates
-    #     :return: List of dates from the file.
-    #     """
-    #     file = open(filename, mode="r", encoding="utf-8")
-    #     list_of_dates = []
-    #     content = file.readlines()
-    #     for each in content:
-    #         dates = each.strip("\n").split("-")
-    #         if len(dates) != 2:
-    #             continue
-    #         start_date_arr = dates[0].split("/")
-    #         end_date_arr = dates[1].split("/")
-    #         if len(start_date_arr) != 3:
-    #             continue
-    #         if len(end_date_arr) != 3:
-    #             continue
-    #         start_date = date(day=int(start_date_arr[0]),month=int(start_date_arr[1]),year=int(start_date_arr[2]))
-    #         end_date = date(day=int(end_date_arr[0]),month=int(end_date_arr[1]),year=int(end_date_arr[2]))
-    #         if start_date > end_date:
-    #             continue
-    #         is_done = False
-    #         while not is_done:
-    #             list_of_dates.append(start_date)
-    #             add_day = timedelta(days=1)
-    #             start_date += add_day
-    #             if start_date > end_date:
-    #                 is_done = True
-    #     file.close()
-    #     return list_of_dates
-
     def is_holiday(self, start_date: date, state: str) -> bool:
         is_weekday = (start_date.weekday() < 5)
         state_holiday = holidays.Australia(prov=state)
@@ -319,105 +285,7 @@ class Calculator():
         
         hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
         return hourly_generated_solar_energy
-        """
-        day_gap = end_time_date.day - start_time_date.day
-        total_solar_across_day = 0
-        for day in range(day_gap, -1, -1):
-            current_year = datetime.now().year
-            current_date = end_time_date - timedelta(days=day)
-            gap = current_date.year - current_year
-            estimated_solar_mean = 0
-            # same day but from three years mean
-            for year in range(3):
-                reference_date = current_date - dateutil.relativedelta.relativedelta(years=(gap+year))
-
-                start_time_point = None
-                end_time_point = None
-                end = False
-                sunrise, sunset = self.get_sunrise_sunset(
-                    reference_date, postcode)
-                sunrise_delta = timedelta(
-                    hours=sunrise.hour, minutes=sunrise.minute)
-                sunset_delta = timedelta(
-                    hours=sunset.hour, minutes=sunset.minute)
-
-                if day_gap > 0:
-                    if current_date.day == start_time_date.day:
-                        # means start will be start_time_date, end will be sunset_time
-                        # check again if the start_time_date was within daylight, if not, change start_time_date to sunrise
-                        target = timedelta(
-                            hours=start_time_date.hour, minutes=start_time_date.minute)
-                        if sunrise_delta >= target <= sunset_delta:
-                            start_time_point = target
-                        elif target > sunset_delta:
-                            end = True
-                        else:
-                            start_time_point = sunrise_delta
-                        end_time_point = sunset_delta
-                    elif current_date.day == end_time_date.day:
-                        # means end will be end_time_date, start will be sunrise time
-                        # check again if the end_time_date was within daylight, if not change end_time_date to sunset
-                        target = timedelta(
-                            hours=end_time_date.hour, minutes=end_time_date.minute)
-                        if sunrise_delta >= target <= sunset_delta:
-                            end_time_point = target
-                        elif target < sunrise_delta:
-                            end = True
-                        else:
-                            end_time_point = sunset_delta
-                        start_time_point = sunrise_delta
-                    else:
-                        # means start will be sunrise and end will be sunset
-                        start_time_point = sunrise_delta
-                        end_time_point = sunset_delta
-                # if daygap == 0
-                else:
-                    start_time_point = timedelta(
-                        hours=start_time_date.hour, minutes=start_time_date.minute)
-                    end_time_point = timedelta(
-                        hours=end_time_date.hour, minutes=end_time_date.minute)
-                    # means not within daylight
-                    if start_time_point > sunset_delta:
-                        return 0
-                    if start_time_point < sunrise_delta:
-                        start_time_point = sunrise_delta
-                    if end_time_point > sunset_delta:
-                        end_time_point = sunset_delta
-                dl = self.get_day_light_length(reference_date, postcode)
-                si = self.get_sun_hour(reference_date, postcode)
-                cloud_cover_list = self.get_cloud_cover(
-                    reference_date, postcode)
-
-                start_time_hour = (start_time_point.seconds // 3600)
-                start_time_minute = (start_time_point.seconds // 60 % 60)
-                end_time_hour = (end_time_point.seconds // 3600)
-                end_time_minute = (end_time_point.seconds // 60 % 60)
-
-
-                total_power_daily = 0
-                current_hour = start_time_hour
-                while not end:
-                    cc = cloud_cover_list[current_hour]
-                    if current_hour == start_time_hour and current_hour == end_time_hour:
-                        du = (end_time_minute - start_time_minute)/60
-                    elif current_hour == start_time_hour:
-                        du = (60 - start_time_minute)/60
-                    elif current_hour == end_time_hour:
-                        du = (end_time_minute)/60
-                    else:
-                        du = 1
-                    hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
-                    print(si,du,dl,cc)
-                    total_power_daily = total_power_daily + hourly_generated_solar_energy
-                    current_hour = current_hour + 1
-                    print(hourly_generated_solar_energy)
-                    if current_hour > end_time_date.hour:
-                        end = True
-                estimated_solar_mean = estimated_solar_mean + total_power_daily
-            estimated_solar_mean = estimated_solar_mean/3
-            total_solar_across_day = total_solar_across_day + estimated_solar_mean
-        return total_solar_across_day
-"""
+       
     def calculate_solar_energy(self, start_time_date: datetime, end_time_date: datetime,
                                postcode: str):
         minus_two_day = timedelta(days=2)
@@ -506,7 +374,6 @@ class Calculator():
                     this_year_end = new_datetime - dateutil.relativedelta.relativedelta(years=i + gap)
                     is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
                     solar_power_this_year = 0
-                    print(this_year_end,this_year_start)
                     if solar_energy:
                         solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
                                                                                    postcode)
