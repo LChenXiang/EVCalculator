@@ -239,9 +239,9 @@ class Calculator():
 
         start_time_point = start_time_date
         end_time_point = end_time_date
-        if start_time_date.hour == sunrise.hour and start_time_date.minute < sunrise.minute:
+        if start_time_date.time() < sunrise:
             start_time_point = datetime.combine(start_time_date.date(),sunrise)
-        elif end_time_date.hour == sunset.hour and end_time_date.minute > sunset.minute:
+        elif end_time_date.time() > sunset:
             end_time_point = datetime.combine(start_time_date.date(),sunset)
 
         dl = self.get_day_light_length(start_time_date, postcode)
@@ -254,7 +254,6 @@ class Calculator():
         # if hour == 1: (means whole hour)
         if time_dif.seconds // 3600 == 1:
             du = 1
-        
         hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
         return hourly_generated_solar_energy
        
@@ -341,14 +340,13 @@ class Calculator():
                 cost_all_year_this_period = 0
                 current_year = datetime.now().year
                 gap = current_date_time.year - current_year
-                if current_year == current_date_time.year:
-                    gap = 1
+                if current_date_time - dateutil.relativedelta.relativedelta(years=gap) > (datetime.today() - timedelta(days=2)):
+                    gap = gap + 1
                 for i in range(3):
                     this_year_start = current_date_time - dateutil.relativedelta.relativedelta(years=i + gap)
                     this_year_end = new_datetime - dateutil.relativedelta.relativedelta(years=i + gap)
                     is_holiday_this_year = self.is_holiday(this_year_start.date(), state)
                     solar_power_this_year = 0
-                    print(this_year_start,this_year_end)
                     if solar_energy:
                         solar_power_this_year = self.calculate_solar_energy_future(this_year_start, this_year_end,
                                                                                    postcode)
@@ -378,17 +376,21 @@ if __name__ == "__main__":
     C = Calculator()
     config = 3
     start_time = time(17,30)
-    start_date = date(2021, 9, 21)
+    start_date = date(2022, 9, 21)
     battery_capacity = 50
     initial_charge = 20
     final_charge = 40
     power = C.get_configuration(config)[0]
     base_cost = C.get_configuration(config)[1]
-    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-                                                   capacity=battery_capacity, power=power)
-    end_time = datetime(2021,9,21,18,15)
-    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                                            start_state=initial_charge, end_time=end_time,
-                                                            base_price=base_cost, power=power,
-                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
-    print(final_cost)
+    #charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
+    #                                               capacity=battery_capacity, power=power)
+    end_time = datetime(2022,9,21,18,15)
+    start_time = datetime(2021, 2, 22, 9, 00)
+    end_time = datetime(2021, 2, 22, 10, 00)
+    solar_energy = C.calculate_solar_energy_future(start_time,end_time,"7250")
+
+    #final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
+    #                                                        start_state=initial_charge, end_time=end_time,
+    #                                                        base_price=base_cost, power=power,
+    #                                                        capacity=battery_capacity, postcode="7250",solar_energy=True)
+    #print(final_cost)
