@@ -14,6 +14,7 @@ test:
         - coverage run -a --source=app --branch -m unittest test/calculator_solarapi_unittest.py
         - coverage run -a --source=app --branch -m unittest test/state_holiday_unittest.py
         - coverage run -a --source=app --branch -m unittest test/requirement_1_whitebox_unittest.py
+        - coverage run -a --source=app --branch -m unittest test/future_solar_energy_testing.py
         - coverage run -a --source=app --branch -m unittest test/validation_unittest.py
         - coverage report -m
         - coverage html -d coverage_reports
