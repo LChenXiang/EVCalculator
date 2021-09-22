@@ -362,12 +362,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 13},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 13},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 14}, {"cloudCoverPct": 13}, {"cloudCoverPct": 12},
-                     {"cloudCoverPct": 11}, {"cloudCoverPct": 20}, {"cloudCoverPct": 29}, {"cloudCoverPct": 37},
-                     {"cloudCoverPct": 48}, {"cloudCoverPct": 59}, {"cloudCoverPct": 69}, {"cloudCoverPct": 75},
-                     {"cloudCoverPct": 81}, {"cloudCoverPct": 87}, {"cloudCoverPct": 79}, {"cloudCoverPct": 72}]}
+                    [{"hour": 1, "cloudCoverPct": 12}, {"hour": 2, "cloudCoverPct": 12},
+                     {"hour": 3, "cloudCoverPct": 12}, {"hour": 4, "cloudCoverPct": 13},
+                     {"hour": 5, "cloudCoverPct": 13}, {"hour": 6, "cloudCoverPct": 12},
+                     {"hour": 7, "cloudCoverPct": 12}, {"hour": 8, "cloudCoverPct": 13},
+                     {"hour": 9, "cloudCoverPct": 13}, {"hour": 10, "cloudCoverPct": 14},
+                     {"hour": 11, "cloudCoverPct": 13}, {"hour": 12, "cloudCoverPct": 12},
+                     {"hour": 13, "cloudCoverPct": 11}, {"hour": 14, "cloudCoverPct": 20},
+                     {"hour": 15, "cloudCoverPct": 29}, {"hour": 16, "cloudCoverPct": 37},
+                     {"hour": 17, "cloudCoverPct": 48}, {"hour": 18, "cloudCoverPct": 59},
+                     {"hour": 19, "cloudCoverPct": 69}, {"hour": 20, "cloudCoverPct": 75},
+                     {"hour": 21, "cloudCoverPct": 81}, {"hour": 22, "cloudCoverPct": 87},
+                     {"hour": 23, "cloudCoverPct": 79}, {"hour": 24, "cloudCoverPct": 72}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
@@ -388,12 +394,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"cloudCoverPct": 100}, {"cloudCoverPct": 94}, {"cloudCoverPct": 87}, {"cloudCoverPct": 81},
-                     {"cloudCoverPct": 79}, {"cloudCoverPct": 78}, {"cloudCoverPct": 76}, {"cloudCoverPct": 78},
-                     {"cloudCoverPct": 80}, {"cloudCoverPct": 82}, {"cloudCoverPct": 67}, {"cloudCoverPct": 51},
-                     {"cloudCoverPct": 35}, {"cloudCoverPct": 30}, {"cloudCoverPct": 24}, {"cloudCoverPct": 18},
-                     {"cloudCoverPct": 18}, {"cloudCoverPct": 19}, {"cloudCoverPct": 19}, {"cloudCoverPct": 16},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 10}, {"cloudCoverPct": 8}, {"cloudCoverPct": 7}]}
+                    [{"hour": 1, "cloudCoverPct": 100}, {"hour": 2, "cloudCoverPct": 94},
+                     {"hour": 3, "cloudCoverPct": 87}, {"hour": 4, "cloudCoverPct": 81},
+                     {"hour": 5, "cloudCoverPct": 79}, {"hour": 6, "cloudCoverPct": 78},
+                     {"hour": 7, "cloudCoverPct": 76}, {"hour": 8, "cloudCoverPct": 78},
+                     {"hour": 9, "cloudCoverPct": 80}, {"hour": 10, "cloudCoverPct": 82},
+                     {"hour": 11, "cloudCoverPct": 67}, {"hour": 12, "cloudCoverPct": 51},
+                     {"hour": 13, "cloudCoverPct": 35}, {"hour": 14, "cloudCoverPct": 30},
+                     {"hour": 15, "cloudCoverPct": 24}, {"hour": 16, "cloudCoverPct": 18},
+                     {"hour": 17, "cloudCoverPct": 18}, {"hour": 18, "cloudCoverPct": 19},
+                     {"hour": 19, "cloudCoverPct": 19}, {"hour": 20, "cloudCoverPct": 16},
+                     {"hour": 21, "cloudCoverPct": 13}, {"hour": 22, "cloudCoverPct": 10},
+                     {"hour": 23, "cloudCoverPct": 8}, {"hour": 24, "cloudCoverPct": 7}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
