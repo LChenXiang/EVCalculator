@@ -65,15 +65,13 @@ class TestFutureSolar(unittest.TestCase):
                                                                                          % (expected_result, solar_energy_generated)))
     def test_5(self):
         """
-            cost_calculation
-            condition: cost calculation
+            cost_calculation for example given in the assignment spec
         """
         config = 3
         start_time = time(17,30)
         start_date = date(2022, 2, 22)
         battery_capacity = 50
         initial_charge = 20
-        final_charge = 40
         power = self.calculator.get_configuration(config)[0]
         base_cost = self.calculator.get_configuration(config)[1]
         end_time = datetime(2022,2,22,18,15)   
@@ -87,15 +85,15 @@ class TestFutureSolar(unittest.TestCase):
 
     def test_6(self):
         """
-            cost_calculation
-            condition: cost calculation
+            cost_calculation for example given in the assignment spec, with the solar_energy = False
+            which by defauly will not happen if the date extends to future, this testing main aim is to cover the branch
+            The boolean for solar_energy is to give much more flexibility to the calculation for future extension
         """
         config = 3
         start_time = time(17,30)
         start_date = date(2022, 2, 22)
         battery_capacity = 50
         initial_charge = 20
-        final_charge = 40
         power = self.calculator.get_configuration(config)[0]
         base_cost = self.calculator.get_configuration(config)[1]
         end_time = datetime(2022,2,22,18,15)   
@@ -110,14 +108,31 @@ class TestFutureSolar(unittest.TestCase):
     def test_7(self):
         """
             cost_calculation for same year which is 12-12-2021 to get reference date for 2020 instead of 2021, value will be difference when the date of testing exceed 12-12-2021
-            condition: cost calculation
+            This is manual calculaiton for the expected output:
+            2020: si = 8.7, dl = 15.15, 
+            5-6: cc = 2, du = 0.5
+            6-7: cc = 1, du = 0.25
+
+            2019: si = 8.1, dl = 15.13, 
+            5-6: cc = 34, du = 0.5
+            6-7: cc = 49, du = 0.25
+
+            2018: si = 8.7, dl = 15.13, 
+            5-6: cc = 6, du = 0.5 
+            6-7: cc = 3, du = 0.25
+
+                    |       2020         |        2019        |        2018        |
+                    |solar | net  | cost | solar| net  | cost | solar| net  | cost | 
+            5-6 pm  |2.8139|0.7861|0.0786|1.7667|1.8333|0.2017|2.7026|0.8974|0.0987|
+            6-7 pm  |1.4213|0.3787|0.0189|0.6826|1.1174|0.0615|1.3944|0.4056|0.0223|
+            total cost = ( 0.0786+0.0189+0.2017+0.0615+0.0987+0.0223 )/3
+            total cost = 0.16
         """
         config = 3
         start_time = time(17,30)
         start_date = date(2021, 12, 12)
         battery_capacity = 50
         initial_charge = 20
-        final_charge = 40
         power = self.calculator.get_configuration(config)[0]
         base_cost = self.calculator.get_configuration(config)[1]
         end_time = datetime(2021,12,12,18,15)  
@@ -126,7 +141,6 @@ class TestFutureSolar(unittest.TestCase):
                                                                 base_price=base_cost, power=power,
                                                                 capacity=battery_capacity, postcode="7250",solar_energy=True)
         expected_output = 0.16
-        print(final_cost)
         self.assertAlmostEqual(final_cost, expected_output, delta=0.01, msg=("Expected %s, got %s instead"
                                                                                          % (expected_output, final_cost)))
 

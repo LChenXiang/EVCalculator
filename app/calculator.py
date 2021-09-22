@@ -44,7 +44,6 @@ class Calculator():
             surcharge_factor = 1.1
         else:
             surcharge_factor = 1
-
         cost = ((final_state - initial_state) / 100) * capacity * \
             (base_price / 100) * surcharge_factor * peak_modifier
         return cost
@@ -308,6 +307,12 @@ class Calculator():
     def total_cost_calculation(self, start_date: date, start_time: time, end_time: datetime,
                                start_state: float, base_price: float, power: float, capacity: float,
                                postcode: str, solar_energy: bool = False) -> float:
+        """
+            To fulfill requirement 3, precondition will be as follow:
+            1) if the date extends to the future, solar_energy by default will have a value of True
+            2) the this_year_start and this_year_end time difference will either be whole hour or partial hour
+        """
+        
         if start_state < 0 or start_state > 100:
             raise ValueError
         if capacity < 0:
