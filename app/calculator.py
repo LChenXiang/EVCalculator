@@ -199,6 +199,7 @@ class Calculator():
         """
         resWeather = self.get_weather_data(input_date, postcode)
         resWeatherCloudCoverList = resWeather.json().get("hourlyWeatherHistory")
+        resWeatherCloudCoverList = sorted(resWeatherCloudCoverList, key = lambda i: i['hour'])
         res_cloud_clover = []
         for each in resWeatherCloudCoverList:
             hourly_cloud = each.get("cloudCoverPct")

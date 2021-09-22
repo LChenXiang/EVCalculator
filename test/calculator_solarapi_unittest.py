@@ -2,6 +2,7 @@ from app.calculator import *
 import unittest
 from datetime import time, date
 from unittest.mock import Mock, patch, PropertyMock
+from requests.exceptions import Timeout
 
 
 class TestDaylightLength(unittest.TestCase):
@@ -235,7 +236,7 @@ class TestSunHours(unittest.TestCase):
         Tests getting sunhours, where the return value from requests.get is mocked
         to see if get_sun_hour raises error correctly.
         """
-        data = [{"id":"81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        data = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
         mocked_response = Mock()
         mocked_response.json.return_value = data
         mocked_response.status_code = 400
@@ -361,12 +362,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 13},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 12}, {"cloudCoverPct": 12}, {"cloudCoverPct": 13},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 14}, {"cloudCoverPct": 13}, {"cloudCoverPct": 12},
-                     {"cloudCoverPct": 11}, {"cloudCoverPct": 20}, {"cloudCoverPct": 29}, {"cloudCoverPct": 37},
-                     {"cloudCoverPct": 48}, {"cloudCoverPct": 59}, {"cloudCoverPct": 69}, {"cloudCoverPct": 75},
-                     {"cloudCoverPct": 81}, {"cloudCoverPct": 87}, {"cloudCoverPct": 79}, {"cloudCoverPct": 72}]}
+                    [{"hour": 1, "cloudCoverPct": 12}, {"hour": 2, "cloudCoverPct": 12},
+                     {"hour": 3, "cloudCoverPct": 12}, {"hour": 4, "cloudCoverPct": 13},
+                     {"hour": 5, "cloudCoverPct": 13}, {"hour": 6, "cloudCoverPct": 12},
+                     {"hour": 7, "cloudCoverPct": 12}, {"hour": 8, "cloudCoverPct": 13},
+                     {"hour": 9, "cloudCoverPct": 13}, {"hour": 10, "cloudCoverPct": 14},
+                     {"hour": 11, "cloudCoverPct": 13}, {"hour": 12, "cloudCoverPct": 12},
+                     {"hour": 13, "cloudCoverPct": 11}, {"hour": 14, "cloudCoverPct": 20},
+                     {"hour": 15, "cloudCoverPct": 29}, {"hour": 16, "cloudCoverPct": 37},
+                     {"hour": 17, "cloudCoverPct": 48}, {"hour": 18, "cloudCoverPct": 59},
+                     {"hour": 19, "cloudCoverPct": 69}, {"hour": 20, "cloudCoverPct": 75},
+                     {"hour": 21, "cloudCoverPct": 81}, {"hour": 22, "cloudCoverPct": 87},
+                     {"hour": 23, "cloudCoverPct": 79}, {"hour": 24, "cloudCoverPct": 72}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
@@ -387,12 +394,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"cloudCoverPct": 100}, {"cloudCoverPct": 94}, {"cloudCoverPct": 87}, {"cloudCoverPct": 81},
-                     {"cloudCoverPct": 79}, {"cloudCoverPct": 78}, {"cloudCoverPct": 76}, {"cloudCoverPct": 78},
-                     {"cloudCoverPct": 80}, {"cloudCoverPct": 82}, {"cloudCoverPct": 67}, {"cloudCoverPct": 51},
-                     {"cloudCoverPct": 35}, {"cloudCoverPct": 30}, {"cloudCoverPct": 24}, {"cloudCoverPct": 18},
-                     {"cloudCoverPct": 18}, {"cloudCoverPct": 19}, {"cloudCoverPct": 19}, {"cloudCoverPct": 16},
-                     {"cloudCoverPct": 13}, {"cloudCoverPct": 10}, {"cloudCoverPct": 8}, {"cloudCoverPct": 7}]}
+                    [{"hour": 1, "cloudCoverPct": 100}, {"hour": 2, "cloudCoverPct": 94},
+                     {"hour": 3, "cloudCoverPct": 87}, {"hour": 4, "cloudCoverPct": 81},
+                     {"hour": 5, "cloudCoverPct": 79}, {"hour": 6, "cloudCoverPct": 78},
+                     {"hour": 7, "cloudCoverPct": 76}, {"hour": 8, "cloudCoverPct": 78},
+                     {"hour": 9, "cloudCoverPct": 80}, {"hour": 10, "cloudCoverPct": 82},
+                     {"hour": 11, "cloudCoverPct": 67}, {"hour": 12, "cloudCoverPct": 51},
+                     {"hour": 13, "cloudCoverPct": 35}, {"hour": 14, "cloudCoverPct": 30},
+                     {"hour": 15, "cloudCoverPct": 24}, {"hour": 16, "cloudCoverPct": 18},
+                     {"hour": 17, "cloudCoverPct": 18}, {"hour": 18, "cloudCoverPct": 19},
+                     {"hour": 19, "cloudCoverPct": 19}, {"hour": 20, "cloudCoverPct": 16},
+                     {"hour": 21, "cloudCoverPct": 13}, {"hour": 22, "cloudCoverPct": 10},
+                     {"hour": 23, "cloudCoverPct": 8}, {"hour": 24, "cloudCoverPct": 7}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
@@ -425,7 +438,7 @@ class TestCloudCover(unittest.TestCase):
         """
         We test get_cloud_cover,mocking the request and seeing if error is raised
         """
-        data = [1,2,3,4]
+        data = [1, 2, 3, 4]
         mocked_response = Mock()
         mocked_response.json.return_value = data
         mocked_response.status_code = 400
@@ -463,7 +476,7 @@ class TestGetWeatherData(unittest.TestCase):
         """
         We test get_weather_data,mocking the request and seeing if error is raised
         """
-        data = [1,2,3]
+        data = [1, 2, 3]
         mocked_response = Mock()
         mocked_response.json.return_value = data
         mocked_response.status_code = 400
@@ -498,38 +511,109 @@ class TestGetWeatherData(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2000, 1, 1), "4000")
 
-    def test_month_greater_10_get_weather_data(self):
+    @patch('app.calculator.requests.get')
+    def test_month_greater_10_get_weather_data(self, mocked_get):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
-        Not mocked, since request is called twice.
+        Mocks for ConnectionError, Timeout, then mocks appropriate response
+        of the two requests to get weather data.
         """
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-12-01"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 200
+
+        mocked_get.side_effect = [ConnectionError, Timeout, mocked_response_1, mocked_response_2]
+        with self.assertRaises(ConnectionError):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
+        with self.assertRaises(Timeout):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
 
         res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
         self.assertEqual(res.json().get("date"), "2019-12-01")
 
-    def test_month_lesser_10_get_weather_data(self):
+    @patch('app.calculator.requests.get')
+    def test_month_lesser_10_get_weather_data(self, mocked_get):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
-        Not mocked, since request is called twice.
+        Mocks for ConnectionError, Timeout, then mocks appropriate response
+        of the two requests to get weather data.
         """
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-09-01"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 200
+
+        mocked_get.side_effect = [ConnectionError, Timeout, mocked_response_1, mocked_response_2]
+        with self.assertRaises(ConnectionError):
+            res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+            self.assertEqual(res, None)
+        with self.assertRaises(Timeout):
+            res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+            self.assertEqual(res, None)
 
         res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
         self.assertEqual(res.json().get("date"), "2019-09-01")
 
-    def test_day_lesser_10_get_weather_data(self):
+    @patch('app.calculator.requests.get')
+    def test_day_lesser_10_get_weather_data(self, mocked_get):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
-        Not mocked, since request is called twice.
+        Mocks for ConnectionError, Timeout, then mocks appropriate response
+        of the two requests to get weather data.
         """
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-09-01"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 200
+        mocked_get.side_effect = [ConnectionError, Timeout, mocked_response_1, mocked_response_2]
+        with self.assertRaises(ConnectionError):
+            res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+            self.assertEqual(res, None)
+        with self.assertRaises(Timeout):
+            res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
+            self.assertEqual(res, None)
 
         res = self.calculator.get_weather_data(date(2019, 9, 1), "4000")
         self.assertEqual(res.json().get("date"), "2019-09-01")
 
-    def test_day_greater_10_get_weather_data(self):
+    @patch('app.calculator.requests.get')
+    def test_day_greater_10_get_weather_data(self, mocked_get):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
-        Not mocked, since request is called twice.
+        Mocks for ConnectionError, Timeout, then mocks appropriate response
+        of the two requests to get weather data.
         """
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-09-10"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 200
+        mocked_get.side_effect = [ConnectionError, Timeout, mocked_response_1, mocked_response_2]
+        with self.assertRaises(ConnectionError):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
+        with self.assertRaises(Timeout):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
+
 
         res = self.calculator.get_weather_data(date(2019, 9, 10), "4000")
         self.assertEqual(res.json().get("date"), "2019-09-10")
