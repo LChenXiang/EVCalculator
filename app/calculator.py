@@ -3,7 +3,6 @@ import holidays
 import requests
 import dateutil.relativedelta
 
-
 class Calculator():
     # you can choose to initialise variables here, if needed.
     def __init__(self):
@@ -313,7 +312,6 @@ class Calculator():
             1) if the date extends to the future, solar_energy by default will have a value of True
             2) the this_year_start and this_year_end time difference will either be whole hour or partial hour
         """
-        
         if start_state < 0 or start_state > 100:
             raise ValueError
         if capacity < 0:
@@ -340,10 +338,12 @@ class Calculator():
             difference_time_minutes = max(
                 0, ((new_datetime - current_date_time).total_seconds() / 60))
             power_from_this_charge = (difference_time_minutes) / 60 * power
+            # future date is define to be 2 days before today
             if current_date_time > datetime.today() - timedelta(days=2):
                 cost_all_year_this_period = 0
                 current_year = datetime.now().year
                 gap = current_date_time.year - current_year
+                # gap will add 1 if current_year is same as the start_year
                 if current_date_time - dateutil.relativedelta.relativedelta(years=gap) > (datetime.today() - timedelta(days=2)):
                     gap = gap + 1
                 for i in range(3):
@@ -374,23 +374,3 @@ class Calculator():
             current_date_time = new_datetime
 
         return round(cost, 2)
-
-if __name__ == "__main__":
-    C = Calculator()
-    config = 3
-    start_time = time(17,30)
-    start_date = date(2021, 12, 12)
-    battery_capacity = 50
-    initial_charge = 20
-    final_charge = 40
-    power = C.get_configuration(config)[0]
-    base_cost = C.get_configuration(config)[1]
-    charge_time = C.time_calculation(initial_state=initial_charge, final_state=final_charge,
-                                                   capacity=battery_capacity, power=power)
-    end_time = datetime(2021,12,12,18,15)  
-    final_cost = C.total_cost_calculation(start_date=start_date, start_time=start_time,
-                                                            start_state=initial_charge, end_time=end_time,
-                                                            base_price=base_cost, power=power,
-                                                            capacity=battery_capacity, postcode="7250",solar_energy=True)
- 
-    print(final_cost)
