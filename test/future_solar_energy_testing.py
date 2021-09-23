@@ -78,13 +78,7 @@ class TestFutureSolar(unittest.TestCase):
         mocked_response_3.json.return_value = data_2019
         mocked_response_3.status_code = 200
 
-        mocked_get.side_effect = [ConnectionError, Timeout, mocked_response_1,mocked_response_2,mocked_response_3]
-        with self.assertRaises(ConnectionError):
-            res = self.calculator.calculate_solar_energy_future(start_time, end_time, postcode)
-            self.assertEqual(res, None)
-        with self.assertRaises(Timeout):
-            res = self.calculator.calculate_solar_energy_future(start_time, end_time, postcode)
-            self.assertEqual(res, None)
+        mocked_get.side_effect = [mocked_response_1,mocked_response_2,mocked_response_3]
         
         solar_energy_generated = self.calculator.calculate_solar_energy_future(
             start_time, end_time, postcode)
