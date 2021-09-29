@@ -48,8 +48,35 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
             self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, self.postcode)
 
 
+class TestSolarEnergyDuration(unittest.TestCase):
+    # t1- error , t2-start>sunset, t3-normal
+    def setUp(self) -> None:
+        self.calculator = Calculator()
+
+    def test_solar_energy_duration_error(self):
+        """
+        Checks if ValueError is raised in appropriate cases
+        """
+        pass
+
+    def test_solar_energy_duration_start_during_sunset(self):
+        """
+        Ensures that function returns 0 if start time is during sunset
+        """
+        pass
+
+    def test_solar_energy_duration_normal(self):
+        """
+        Test case for normal inputs
+        """
+        pass
+
+
 if __name__ == '__main__':
     # load these test suits
     solar_calc_suit = unittest.TestLoader().loadTestsFromTestCase(TestSolarEnergyPastCalculator)
+    solar_dur_suit = unittest.TestLoader().loadTestsFromTestCase(TestSolarEnergyDuration)
+
     # run the test suits
     unittest.TextTestRunner(verbosity=2).run(solar_calc_suit)
+    unittest.TextTestRunner(verbosity=2).run(solar_dur_suit)
