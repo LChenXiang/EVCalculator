@@ -161,9 +161,6 @@ class Calculator():
     # get the sunrise and sunset, min max the start and the end, then just get the
     # difference and convert it to hours or something.
     def get_solar_energy_duration(self, start_time: time, end_time: time, input_date: date, postcode: str):
-
-        # t1- error , t2-start>sunset, t3-normal
-
         # THIS FUNCTION SHOULD ONLY BE USED FOR REQ 2!
         # Tell me if u want me to change this to better suit need (NYK)
 
@@ -236,8 +233,6 @@ class Calculator():
         :param postcode: The postcode which specifies where the solar energy calculation takes place, since different states may have different solar energy generation
         :return: Total solar energy generated in KWh within the specified start and end datetime at the specified state based on postcode.
         """
-        # TODO: implement req 2
-        # RETURN 0 FOR THE DATE IF IT IS LESS THAN 1 JULY 2008!
         current_date = start_time_date.date()
         next_date = timedelta(days=1)
         total_energy = 0
