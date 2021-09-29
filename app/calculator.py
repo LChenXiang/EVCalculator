@@ -22,7 +22,7 @@ class Calculator():
         self.location_data = {}
         self.weather_data = {}
 
-        self.EARLIEST_DATE = datetime(2008, 7, 1)
+        self.EARLIEST_DATE = date(2008, 7, 1)
         self.PANEL_SIZE = 50
         self.PANEL_EFFICIENCY = 0.2
 
@@ -222,6 +222,20 @@ class Calculator():
 
     def calculate_solar_energy_past_to_currentday_minus_two(self, start_time_date: datetime,
                                                             end_time_date: datetime, postcode: str):
+        """
+        Takes in start and end datetimes to calculate solar energy generated based on provided postcode.
+        This function can be used to calculate duration over multiple days, as well as within a few hours during the same day
+        including partial hours.
+        Only calculates solar energy between 1st July 2008 to 2 days before current date of input.
+
+        Precondition: start_time_date must be during or after 1st July 2008
+                      end_time_date must be 2 days before current date of input
+
+        :param start_time_date: The starting date and time for solar energy calculation
+        :param end_time_date: The ending date and time for solar energy calculation
+        :param postcode: The postcode which specifies where the solar energy calculation takes place, since different states may have different solar energy generation
+        :return: Total solar energy generated in KWh within the specified start and end datetime at the specified state based on postcode.
+        """
         # TODO: implement req 2
         # RETURN 0 FOR THE DATE IF IT IS LESS THAN 1 JULY 2008!
         current_date = start_time_date.date()
@@ -423,4 +437,3 @@ class Calculator():
             current_date_time = new_datetime
 
         return round(cost, 2)
-
