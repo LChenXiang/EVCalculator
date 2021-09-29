@@ -422,7 +422,7 @@ class Calculator():
                 solar_power_this_period = 0
                 if solar_energy:
                     solar_power_this_period = \
-                        self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, state)
+                        self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, postcode)
                 remaining_charge = max(0, power_from_this_charge - solar_power_this_period)
                 time_remaining_charge = remaining_charge / power
                 fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
