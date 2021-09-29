@@ -128,7 +128,7 @@ class TestTotalCostWithSolarPast(unittest.TestCase):
 
     def test_whitebox_total_cost_no_solar_past(self):
         """
-        Path coverage test for total_cost_calculation taking solar energy from past dates into account
+        Path coverage test for total_cost_calculation without taking solar energy from past dates into account
         """
         config = 8
         start_time = time(8)
