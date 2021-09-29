@@ -17,7 +17,7 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
         end = datetime(2008, 7, 1, 13)
         expected = 1.82
         actual = self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, self.postcode)
-        self.assertAlmostEqual(actual, expected, delta=0.01, msg=("Expected %s, Got %s instead") % (expected, actual))
+        self.assertAlmostEqual(actual, expected, delta=0.1, msg=("Expected %s, Got %s instead") % (expected, actual))
 
     def test_solar_energy_past_testcase2(self):
         """
@@ -29,7 +29,7 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
         actual = self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, self.postcode)
         self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
 
-    def test_solar_energy_past_test_diff_date(self):
+    def test_solar_energy_past_diff_date(self):
         """
         Path coverage for datetime validation test for calculate_solar_energy_past_to_currentday_minus_two
         """
@@ -38,7 +38,7 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, self.postcode)
 
-    def test_solar_energy_past_test_invalid_hours_interval(self):
+    def test_solar_energy_past_invalid_hours_interval(self):
         """
         Path coverage for datetime validation test for calculate_solar_energy_past_to_currentday_minus_two
         """
@@ -46,6 +46,17 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
         end = datetime(2008, 7, 1, 13, 5)
         with self.assertRaises(ValueError):
             self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, self.postcode)
+
+    def test_solar_energy_part_asgn_example(self):
+        """
+        Additional test using given example from assignment specs (Example 1)
+        """
+        start = datetime(2020, 12, 25, 8)
+        end = datetime(2020, 12, 25, 9)
+        postcode = "6001"
+        expected = 6.02
+        actual = self.calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, postcode)
+        self.assertAlmostEqual(actual, expected, delta=0.1, msg=("Expected %s, Got %s instead") % (expected, actual))
 
 
 class TestSolarEnergyDuration(unittest.TestCase):
