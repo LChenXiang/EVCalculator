@@ -49,27 +49,40 @@ class TestSolarEnergyPastCalculator(unittest.TestCase):
 
 
 class TestSolarEnergyDuration(unittest.TestCase):
-    # t1- error , t2-start>sunset, t3-normal
+
     def setUp(self) -> None:
         self.calculator = Calculator()
+        self.postcode = "4000"
+        self.date = date(2021, 9, 10)
 
     def test_solar_energy_duration_error(self):
         """
-        Checks if ValueError is raised in appropriate cases
+        Checks if ValueError is raised in appropriate cases (test case 1)
         """
-        pass
+        start = time(13)
+        end = time(12)
+        with self.assertRaises(ValueError):
+            self.calculator.get_solar_energy_duration(start, end, self.date, self.postcode)
 
     def test_solar_energy_duration_start_during_sunset(self):
         """
-        Ensures that function returns 0 if start time is during sunset
+        Ensures that function returns 0 if start time is during sunset (test case 2)
         """
-        pass
+        start = time(22)
+        end = time(23)
+        expected = 0
+        actual = self.calculator.get_solar_energy_duration(start, end, self.date, self.postcode)
+        self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
 
     def test_solar_energy_duration_normal(self):
         """
-        Test case for normal inputs
+        Test case for normal inputs (test case 3)
         """
-        pass
+        start = time(12, 30)
+        end = time(13)
+        expected = 0.5
+        actual = self.calculator.get_solar_energy_duration(start, end, self.date, self.postcode)
+        self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
 
 
 if __name__ == '__main__':
