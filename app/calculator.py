@@ -227,14 +227,22 @@ class Calculator():
         Precondition: start_time_date must be during or after 1st July 2008
                       end_time_date must be 2 days before current date of input
                       start_time_date.date() and end_time_date.date() must be the same
+                      start_time_date.time() and end_time_date.time() must have at most an hour interval, inclusive
 
         :param start_time_date: The starting date and time for solar energy calculation
         :param end_time_date: The ending date and time for solar energy calculation
         :param postcode: The postcode which specifies where the solar energy calculation takes place, since different states may have different solar energy generation
         :return: Total solar energy generated in KWh within the specified start and end datetime at the specified state based on postcode.
         """
-        # we assume start date = end date since we are calculating by hour of the same day
-        if start_time_date.date() != end_time_date.date():
+        # We first check if start and end times are valid
+        # If difference in hour is less 0, means starting time is later than end time
+        # If difference in hour is more than 1, means interval between starting time and end time is more than 1 hour, which is not valid
+        # Additionally, this also checks if the days are different, since difference in hours will show
+        # This works since the app is programmed to call this function again if it reaches a new day.
+        # So if range is 01/07/2008 23:30:00 to 02/07/2008 00:30:00, the function should be called twice like so:
+        # 01/07/2008 23:30:00 to 01/07/2008 23:59:59, then 02/07/2008 00:00:00 to 02/07/2008 00:30:00
+        diff_in_hours = (end_time_date - start_time_date).total_seconds() / 3600
+        if diff_in_hours < 0 or diff_in_hours > 1:
             raise ValueError
 
         # date of this starting datetime
@@ -425,3 +433,15 @@ class Calculator():
             current_date_time = new_datetime
 
         return round(cost, 2)
+
+if __name__ == '__main__':
+    calculator = Calculator()
+    start = datetime(2008, 7, 31, 12)
+    end = datetime(2008, 7, 30, 13)
+    diff = (end - start).total_seconds()
+    # diff = diff.seconds
+    print(diff/3600)
+    postcode = "4000"
+    expected = 0
+    # actual = calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, postcode)
+    # print(actual)

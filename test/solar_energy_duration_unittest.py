@@ -26,7 +26,7 @@ class TestSolarEnergyDuration(unittest.TestCase):
         """
         pass
 
-    
+
 if __name__ == '__main__':
     # load this test suit
     suit = unittest.TestLoader().loadTestsFromTestCase(TestSolarEnergyDuration)
