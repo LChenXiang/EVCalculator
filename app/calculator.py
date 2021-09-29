@@ -433,15 +433,3 @@ class Calculator():
             current_date_time = new_datetime
 
         return round(cost, 2)
-
-if __name__ == '__main__':
-    calculator = Calculator()
-    start = datetime(2008, 7, 31, 12)
-    end = datetime(2008, 7, 30, 13)
-    diff = (end - start).total_seconds()
-    # diff = diff.seconds
-    print(diff/3600)
-    postcode = "4000"
-    expected = 0
-    # actual = calculator.calculate_solar_energy_past_to_currentday_minus_two(start, end, postcode)
-    # print(actual)
