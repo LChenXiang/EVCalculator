@@ -96,11 +96,43 @@ class TestSolarEnergyDuration(unittest.TestCase):
         self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
 
 
+class TestTotalCostWithSolarPast(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.calculator = Calculator()
+        self.postcode = "6001"
+
+    def test_whitebox_total_cost_solar_past(self):
+        """
+        Path coverage test for total_cost_calculation taking solar energy from past dates into account
+        """
+        config = 8
+        start_time = time(8)
+        start_date = date(2020, 12, 25)
+        battery_capacity = 50
+        initial_charge = 20
+        final_charge = 80
+        expected_cost = 16.22
+        power = self.calculator.get_configuration(config)[0]
+        base_cost = self.calculator.get_configuration(config)[1]
+        charge_time = self.calculator.time_calculation(initial_state=initial_charge, final_state=final_charge,
+                                                       capacity=battery_capacity, power=power)
+        end_time = self.calculator.get_end_time(start_date, start_time, charge_time)
+        final_cost = self.calculator.total_cost_calculation(start_date=start_date, start_time=start_time,
+                                                            start_state=initial_charge, end_time=end_time,
+                                                            base_price=base_cost, power=power,
+                                                            capacity=battery_capacity, postcode=self.postcode, solar_energy=True)
+
+        self.assertAlmostEqual(final_cost, expected_cost, delta=0.01, msg=("Expected %s, got %s instead"
+                                                                           % (expected_cost, final_cost)))
+
 if __name__ == '__main__':
     # load these test suits
     solar_calc_suit = unittest.TestLoader().loadTestsFromTestCase(TestSolarEnergyPastCalculator)
     solar_dur_suit = unittest.TestLoader().loadTestsFromTestCase(TestSolarEnergyDuration)
+    total_cost_suit = unittest.TestLoader().loadTestsFromTestCase(TestTotalCostWithSolarPast)
 
     # run the test suits
     unittest.TextTestRunner(verbosity=2).run(solar_calc_suit)
     unittest.TextTestRunner(verbosity=2).run(solar_dur_suit)
+    unittest.TextTestRunner(verbosity=2).run(total_cost_suit)
