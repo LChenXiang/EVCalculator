@@ -35,6 +35,10 @@ class Calculator_Form(FlaskForm):
     def validate_InitialCharge(self, field):
         # another example of how to compare initial charge with final charge
         # you may modify this part of the code
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
         try:
             initialCharge = float(field.data)
         except ValueError:
@@ -49,6 +53,10 @@ class Calculator_Form(FlaskForm):
 
     # validate final charge here
     def validate_FinalCharge(self, field):
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
         try:
             initialCharge = float(self.InitialCharge.data)
         except ValueError:
@@ -75,6 +83,10 @@ class Calculator_Form(FlaskForm):
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
         try:
             config = int(field.data)
         except ValueError:
@@ -84,7 +96,11 @@ class Calculator_Form(FlaskForm):
 
     # validate postcode here
     def validate_PostCode(self, field):
-        # TODO: Check if can be better
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+
         try:
             postCode = int(field.data)
         except ValueError:
