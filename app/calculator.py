@@ -172,6 +172,9 @@ class Calculator():
 
         sunrise_sunset = self.get_sunrise_sunset(input_date, postcode)
 
+        if start_time >= sunrise_sunset[1]:
+            return 0
+
         start_time_actual = max(start_time, sunrise_sunset[0])
         end_time_actual = min(end_time, sunrise_sunset[1])
         start_time_delta = timedelta(hours=int(start_time_actual.hour),
