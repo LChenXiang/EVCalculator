@@ -512,6 +512,21 @@ class TestGetWeatherData(unittest.TestCase):
             self.calculator.get_weather_data(date(2000, 1, 1), "4000")
 
     @patch('app.calculator.requests.get')
+    def test_get_weather_data_invalid_status_code(self, mocked_get):
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-12-01"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 400
+        mocked_get.side_effect = [mocked_response_1, mocked_response_2]
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
+
+    @patch('app.calculator.requests.get')
     def test_month_greater_10_get_weather_data(self, mocked_get):
         """
         Test branch of when the month is greater or equal to 10, for coverage.
