@@ -22,6 +22,10 @@ class Calculator():
         self.location_data = {}
         self.weather_data = {}
 
+        self.EARLIEST_DATE = date(2008, 7, 1)
+        self.PANEL_SIZE = 50
+        self.PANEL_EFFICIENCY = 0.2
+
     # you may add more parameters if needed, you may modify the formula also.
     def cost_calculation(self, initial_state: float, final_state: float, capacity: float,
                          is_peak: bool, is_holiday: bool, base_price: float) -> float:
@@ -159,7 +163,15 @@ class Calculator():
     def get_solar_energy_duration(self, start_time: time, end_time: time, input_date: date, postcode: str):
         # THIS FUNCTION SHOULD ONLY BE USED FOR REQ 2!
         # Tell me if u want me to change this to better suit need (NYK)
+
+        if start_time > end_time:
+            raise ValueError
+
         sunrise_sunset = self.get_sunrise_sunset(input_date, postcode)
+
+        if start_time >= sunrise_sunset[1]:
+            return 0
+
         start_time_actual = max(start_time, sunrise_sunset[0])
         end_time_actual = min(end_time, sunrise_sunset[1])
         start_time_delta = timedelta(hours=int(start_time_actual.hour),
@@ -207,9 +219,56 @@ class Calculator():
 
     def calculate_solar_energy_past_to_currentday_minus_two(self, start_time_date: datetime,
                                                             end_time_date: datetime, postcode: str):
-        # TODO: implement req 2
-        # RETURN 0 FOR THE DATE IF IT IS LESS THAN 1 JULY 2008!
-        pass
+        """
+        Takes in start and end datetimes to calculate solar energy generated based on provided postcode.
+        This function can be used to calculate solar energy with duration up to an hour of a specific date.
+        Only calculates solar energy between 1st July 2008 to 2 days before current date of input.
+
+        Precondition: start_time_date must be during or after 1st July 2008
+                      end_time_date must be 2 days before current date of input
+                      start_time_date.date() and end_time_date.date() must be the same
+                      start_time_date.time() and end_time_date.time() must have at most an hour interval, inclusive
+
+        :param start_time_date: The starting date and time for solar energy calculation
+        :param end_time_date: The ending date and time for solar energy calculation
+        :param postcode: The postcode which specifies where the solar energy calculation takes place, since different states may have different solar energy generation
+        :return: Total solar energy generated in KWh within the specified start and end datetime at the specified state based on postcode.
+        """
+        # We first check if start and end times are valid
+        # If difference in hour is less 0, means starting time is later than end time
+        # If difference in hour is more than 1, means interval between starting time and end time is more than 1 hour, which is not valid
+        # Additionally, this also checks if the days are different, since difference in hours will show
+        # This works since the app is programmed to call this function again if it reaches a new day.
+        # So if range is 01/07/2008 23:30:00 to 02/07/2008 00:30:00, the function should be called twice like so:
+        # 01/07/2008 23:30:00 to 01/07/2008 23:59:59, then 02/07/2008 00:00:00 to 02/07/2008 00:30:00
+        diff_in_hours = (end_time_date - start_time_date).total_seconds() / 3600
+        if diff_in_hours < 0 or diff_in_hours > 1:
+            raise ValueError
+
+        # date of this starting datetime
+        start_date = start_time_date.date()
+
+        # if the starting date is 1st July 2008 or later
+        if start_date >= self.EARLIEST_DATE:
+            sun_hour = self.get_sun_hour(start_date, postcode)  # retrieve solar insolation of this date (sun hour)
+
+            daylight_length = self.get_day_light_length(start_date, postcode)  # retrieve daylight length of this date
+
+            start = start_time_date.time()  # get the starting time
+
+            end = end_time_date.time()      # get the end time
+
+            # get the duration of solar energy within this time period (range 0 to 1)
+            duration = self.get_solar_energy_duration(start, end, start_date, postcode)
+
+            # finally calculate solar energy generated for the day and add into total sum
+            energy = sun_hour * duration / daylight_length * self.PANEL_SIZE * self.PANEL_EFFICIENCY
+
+            return energy
+
+        # this function only calculates solar energy starting from 01/07/2008, so return 0 for anything earlier than this day
+        else:
+            return 0
 
     def calculate_solar_energy_future(self, start_time_date: datetime, end_time_date: datetime,
                                       postcode: str):
@@ -363,7 +422,7 @@ class Calculator():
                 solar_power_this_period = 0
                 if solar_energy:
                     solar_power_this_period = \
-                        self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, state)
+                        self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, postcode)
                 remaining_charge = max(0, power_from_this_charge - solar_power_this_period)
                 time_remaining_charge = remaining_charge / power
                 fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
