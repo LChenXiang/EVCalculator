@@ -314,17 +314,6 @@ class Calculator():
             du = 1
         hourly_generated_solar_energy = si * du / dl * (1-cc/100) * 50 * 0.2
         return hourly_generated_solar_energy
-       
-    def calculate_solar_energy(self, start_time_date: datetime, end_time_date: datetime,
-                               postcode: str):
-        minus_two_day = timedelta(days=2)
-        current_date = datetime.now().date()
-        if start_time_date.date() > (current_date - minus_two_day):
-            return self.calculate_solar_energy_future(start_time_date, end_time_date, postcode)
-        else:
-            return self.calculate_solar_energy_past_to_currentday_minus_two(start_time_date,
-                                                                            end_time_date,
-                                                                            postcode)
 
     def get_charging_time_str(self, charge_hours: float):
 
