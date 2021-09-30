@@ -85,9 +85,19 @@ class TestSolarEnergyDuration(unittest.TestCase):
         actual = self.calculator.get_solar_energy_duration(start, end, self.date, self.postcode)
         self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
 
+    def test_solar_energy_duration_end_before_sunrise(self):
+        """
+        Ensures that function returns 0 if end time is before or during sunrise (test case 3)
+        """
+        start = time(3)
+        end = time(4)
+        expected = 0
+        actual = self.calculator.get_solar_energy_duration(start, end, self.date, self.postcode)
+        self.assertEqual(actual, expected, msg=("Expected %s, Got %s instead") % (expected, actual))
+
     def test_solar_energy_duration_normal(self):
         """
-        Test case for normal inputs (test case 3)
+        Test case for normal inputs (test case 4)
         """
         start = time(12, 30)
         end = time(13)
