@@ -171,6 +171,8 @@ class Calculator():
 
         if start_time >= sunrise_sunset[1]:
             return 0
+        if end_time <= sunrise_sunset[0]:
+            return 0
 
         start_time_actual = max(start_time, sunrise_sunset[0])
         end_time_actual = min(end_time, sunrise_sunset[1])
@@ -423,7 +425,7 @@ class Calculator():
                 if solar_energy:
                     solar_power_this_period = \
                         self.calculate_solar_energy_past_to_currentday_minus_two(current_date_time, new_datetime, postcode)
-                remaining_charge = max(0, power_from_this_charge - solar_power_this_period)
+                remaining_charge = max(0, (power_from_this_charge - solar_power_this_period))
                 time_remaining_charge = remaining_charge / power
                 fsoc = ((time_remaining_charge * power / capacity) + (start_state / 100)) * 100
                 cost += self.cost_calculation(start_state, fsoc, capacity, peak, holiday_surcharge, base_price)

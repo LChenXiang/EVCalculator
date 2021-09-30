@@ -44,7 +44,7 @@ def operation_result():
         time_charge = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
         end_time = calculator.get_end_time(start_date, start_time, time_charge)
         cost = calculator.total_cost_calculation(start_date, start_time, end_time, initial_charge,
-                                                 base_cost, power, battery_capacity, postcode)
+                                                 base_cost, power, battery_capacity, postcode, solar_energy=True)
         cost_str = "$%.2f" % cost
         time_str = calculator.get_charging_time_str(time_charge)
 
