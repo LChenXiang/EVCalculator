@@ -362,18 +362,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"hour": 1, "cloudCoverPct": 12}, {"hour": 2, "cloudCoverPct": 12},
-                     {"hour": 3, "cloudCoverPct": 12}, {"hour": 4, "cloudCoverPct": 13},
-                     {"hour": 5, "cloudCoverPct": 13}, {"hour": 6, "cloudCoverPct": 12},
-                     {"hour": 7, "cloudCoverPct": 12}, {"hour": 8, "cloudCoverPct": 13},
-                     {"hour": 9, "cloudCoverPct": 13}, {"hour": 10, "cloudCoverPct": 14},
-                     {"hour": 11, "cloudCoverPct": 13}, {"hour": 12, "cloudCoverPct": 12},
-                     {"hour": 13, "cloudCoverPct": 11}, {"hour": 14, "cloudCoverPct": 20},
-                     {"hour": 15, "cloudCoverPct": 29}, {"hour": 16, "cloudCoverPct": 37},
-                     {"hour": 17, "cloudCoverPct": 48}, {"hour": 18, "cloudCoverPct": 59},
-                     {"hour": 19, "cloudCoverPct": 69}, {"hour": 20, "cloudCoverPct": 75},
-                     {"hour": 21, "cloudCoverPct": 81}, {"hour": 22, "cloudCoverPct": 87},
-                     {"hour": 23, "cloudCoverPct": 79}, {"hour": 24, "cloudCoverPct": 72}]}
+                    [{"hour": 0, "cloudCoverPct": 12}, {"hour": 1, "cloudCoverPct": 12},
+                     {"hour": 2, "cloudCoverPct": 12}, {"hour": 3, "cloudCoverPct": 13},
+                     {"hour": 4, "cloudCoverPct": 13}, {"hour": 5, "cloudCoverPct": 12},
+                     {"hour": 6, "cloudCoverPct": 12}, {"hour": 7, "cloudCoverPct": 13},
+                     {"hour": 8, "cloudCoverPct": 13}, {"hour": 9, "cloudCoverPct": 14},
+                     {"hour": 10, "cloudCoverPct": 13}, {"hour": 11, "cloudCoverPct": 12},
+                     {"hour": 12, "cloudCoverPct": 11}, {"hour": 13, "cloudCoverPct": 20},
+                     {"hour": 14, "cloudCoverPct": 29}, {"hour": 15, "cloudCoverPct": 37},
+                     {"hour": 16, "cloudCoverPct": 48}, {"hour": 17, "cloudCoverPct": 59},
+                     {"hour": 18, "cloudCoverPct": 69}, {"hour": 19, "cloudCoverPct": 75},
+                     {"hour": 20, "cloudCoverPct": 81}, {"hour": 21, "cloudCoverPct": 87},
+                     {"hour": 22, "cloudCoverPct": 79}, {"hour": 23, "cloudCoverPct": 72}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
@@ -394,18 +394,18 @@ class TestCloudCover(unittest.TestCase):
         """
         mocked_response = Mock()
         data = {"hourlyWeatherHistory":
-                    [{"hour": 1, "cloudCoverPct": 100}, {"hour": 2, "cloudCoverPct": 94},
-                     {"hour": 3, "cloudCoverPct": 87}, {"hour": 4, "cloudCoverPct": 81},
-                     {"hour": 5, "cloudCoverPct": 79}, {"hour": 6, "cloudCoverPct": 78},
-                     {"hour": 7, "cloudCoverPct": 76}, {"hour": 8, "cloudCoverPct": 78},
-                     {"hour": 9, "cloudCoverPct": 80}, {"hour": 10, "cloudCoverPct": 82},
-                     {"hour": 11, "cloudCoverPct": 67}, {"hour": 12, "cloudCoverPct": 51},
-                     {"hour": 13, "cloudCoverPct": 35}, {"hour": 14, "cloudCoverPct": 30},
-                     {"hour": 15, "cloudCoverPct": 24}, {"hour": 16, "cloudCoverPct": 18},
-                     {"hour": 17, "cloudCoverPct": 18}, {"hour": 18, "cloudCoverPct": 19},
-                     {"hour": 19, "cloudCoverPct": 19}, {"hour": 20, "cloudCoverPct": 16},
-                     {"hour": 21, "cloudCoverPct": 13}, {"hour": 22, "cloudCoverPct": 10},
-                     {"hour": 23, "cloudCoverPct": 8}, {"hour": 24, "cloudCoverPct": 7}]}
+                    [{"hour": 0, "cloudCoverPct": 100}, {"hour": 1, "cloudCoverPct": 94},
+                     {"hour": 2, "cloudCoverPct": 87}, {"hour": 3, "cloudCoverPct": 81},
+                     {"hour": 4, "cloudCoverPct": 79}, {"hour": 5, "cloudCoverPct": 78},
+                     {"hour": 6, "cloudCoverPct": 76}, {"hour": 7, "cloudCoverPct": 78},
+                     {"hour": 8, "cloudCoverPct": 80}, {"hour": 9, "cloudCoverPct": 82},
+                     {"hour": 10, "cloudCoverPct": 67}, {"hour": 11, "cloudCoverPct": 51},
+                     {"hour": 12, "cloudCoverPct": 35}, {"hour": 13, "cloudCoverPct": 30},
+                     {"hour": 14, "cloudCoverPct": 24}, {"hour": 15, "cloudCoverPct": 18},
+                     {"hour": 16, "cloudCoverPct": 18}, {"hour": 17, "cloudCoverPct": 19},
+                     {"hour": 18, "cloudCoverPct": 19}, {"hour": 19, "cloudCoverPct": 16},
+                     {"hour": 20, "cloudCoverPct": 13}, {"hour": 21, "cloudCoverPct": 10},
+                     {"hour": 22, "cloudCoverPct": 8}, {"hour": 23, "cloudCoverPct": 7}]}
         mocked_response.json.return_value = data
         mocked_get.return_value = mocked_response
 
@@ -510,6 +510,21 @@ class TestGetWeatherData(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             self.calculator.get_weather_data(date(2000, 1, 1), "4000")
+
+    @patch('app.calculator.requests.get')
+    def test_get_weather_data_invalid_status_code(self, mocked_get):
+        data_1 = [{"id": "81a5f4b3-df47-4c20-ba2a-ea025e6ac0f8"}]
+        mocked_response_1 = Mock()
+        mocked_response_1.json.return_value = data_1
+        mocked_response_1.status_code = 200
+        data_2 = {"date": "2019-12-01"}
+        mocked_response_2 = Mock()
+        mocked_response_2.json.return_value = data_2
+        mocked_response_2.status_code = 400
+        mocked_get.side_effect = [mocked_response_1, mocked_response_2]
+        with self.assertRaises(ValueError):
+            res = self.calculator.get_weather_data(date(2019, 12, 1), "4000")
+            self.assertEqual(res, None)
 
     @patch('app.calculator.requests.get')
     def test_month_greater_10_get_weather_data(self, mocked_get):
